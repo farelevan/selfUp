@@ -13,6 +13,7 @@ struct TodayView: View {
     @Query private var habits: [Habit]
     @Query private var tasks: [TaskItem]
     @Query private var transactions: [Transaction]
+    @Query private var rewards: [Reward]
     
     @State private var showingSettings = false
     @State private var animateScore = false
@@ -37,7 +38,7 @@ struct TodayView: View {
     }
     
     private var snapshot: ProgressSnapshot {
-        ProgressService.snapshot(habits: habits, tasks: tasks, transactions: transactions, on: Date())
+        ProgressService.snapshot(habits: habits, tasks: tasks, transactions: transactions, rewards: rewards, on: Date())
     }
     
     private var currencySymbol: String {

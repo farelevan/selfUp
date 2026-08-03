@@ -4,10 +4,14 @@ import SwiftData
 struct MoneyView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Transaction.date, order: .reverse) private var transactions: [Transaction]
+    @Query(sort: \SavingGoal.createdAt) private var savingGoals: [SavingGoal]
     
     @State private var showingEditor = false
     @State private var transactionToEdit: Transaction? = nil
     @State private var showingSettings = false
+    @State private var showingGoalEditor = false
+    @State private var goalToEdit: SavingGoal? = nil
+    @State private var goalToFund: SavingGoal? = nil
     
     private var currencySymbol: String {
         UserDefaults.standard.string(forKey: "selected_currency") ?? "Rp"
@@ -110,6 +114,112 @@ struct MoneyView: View {
                             .padding(.horizontal)
                     }
                     
+                    // Saving Goals Section
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Saving Goals")
+                                .font(.headline)
+                            Spacer()
+                            Button {
+                                showingGoalEditor = true
+                            } label: {
+                                Image(systemName: "plus.circle")
+                                    .font(.title3)
+                            }
+                        }
+                        .padding(.horizontal)
+                        
+                        if savingGoals.isEmpty {
+                            VStack(spacing: 8) {
+                                Text("No saving goals set.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                Button("Add Saving Goal") {
+                                    showingGoalEditor = true
+                                }
+                                .font(.subheadline)
+                                .bold()
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(.secondarySystemGroupedBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .padding(.horizontal)
+                        } else {
+                            VStack(spacing: 12) {
+                                ForEach(savingGoals) { goal in
+                                    let progress = goal.targetAmount > 0 ? min(1.0, Double(truncating: (goal.currentAmount / goal.targetAmount) as NSDecimalNumber)) : 0.0
+                                    
+                                    VStack(alignment: .leading, spacing: 10) {
+                                        HStack {
+                                            Text(goal.title)
+                                                .font(.subheadline)
+                                                .bold()
+                                            Spacer()
+                                            Text("\(progress * 100, format: .number.precision(.fractionLength(0)))%")
+                                                .font(.caption)
+                                                .bold()
+                                                .foregroundStyle(.blue)
+                                        }
+                                        
+                                        GeometryReader { geo in
+                                            ZStack(alignment: .leading) {
+                                                Capsule()
+                                                    .fill(Color.gray.opacity(0.1))
+                                                    .frame(height: 6)
+                                                Capsule()
+                                                    .fill(Color.blue)
+                                                    .frame(width: geo.size.width * CGFloat(progress), height: 6)
+                                            }
+                                        }
+                                        .frame(height: 6)
+                                        
+                                        HStack {
+                                            Text("\(currencySymbol) \(goal.currentAmount, format: .number) / \(currencySymbol) \(goal.targetAmount, format: .number)")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                            Spacer()
+                                            
+                                            Button {
+                                                goalToFund = goal
+                                            } label: {
+                                                HStack(spacing: 4) {
+                                                    Image(systemName: "plus")
+                                                    Text("Add Funds")
+                                                }
+                                                .font(.caption2)
+                                                .bold()
+                                                .padding(.horizontal, 8)
+                                                .padding(.vertical, 4)
+                                                .background(Color.blue.opacity(0.1))
+                                                .foregroundStyle(.blue)
+                                                .clipShape(Capsule())
+                                            }
+                                            .buttonStyle(.plain)
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color(.secondarySystemGroupedBackground))
+                                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                                    .contextMenu {
+                                        Button {
+                                            goalToEdit = goal
+                                        } label: {
+                                            Label("Edit", systemImage: "pencil")
+                                        }
+                                        
+                                        Button(role: .destructive) {
+                                            deleteGoal(goal)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    
                     // Recent Transactions List
                     VStack(alignment: .leading, spacing: 12) {
                         Text("This Month's Transactions")
@@ -185,11 +295,25 @@ struct MoneyView: View {
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
             }
+            .sheet(isPresented: $showingGoalEditor) {
+                SavingGoalEditorView()
+            }
+            .sheet(item: $goalToEdit) { goal in
+                SavingGoalEditorView(goalToEdit: goal)
+            }
+            .sheet(item: $goalToFund) { goal in
+                SavingGoalFundView(goal: goal)
+            }
         }
     }
     
     private func delete(_ transaction: Transaction) {
         modelContext.delete(transaction)
+        try? modelContext.save()
+    }
+    
+    private func deleteGoal(_ goal: SavingGoal) {
+        modelContext.delete(goal)
         try? modelContext.save()
     }
 }

@@ -10,7 +10,9 @@ struct SelfUpApp: App {
             Habit.self,
             HabitCompletion.self,
             Transaction.self,
-            TaskItem.self
+            TaskItem.self,
+            Reward.self,
+            SavingGoal.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
@@ -56,6 +58,12 @@ struct ContentView: View {
                     Label("Tasks", systemImage: "checklist")
                 }
                 .tag(AppDestination.tasks)
+            
+            RewardsView()
+                .tabItem {
+                    Label("Rewards", systemImage: "gift")
+                }
+                .tag(AppDestination.rewards)
             
             InsightsView()
                 .tabItem {

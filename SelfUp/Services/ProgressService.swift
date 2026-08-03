@@ -3,6 +3,8 @@ import Foundation
 struct ProgressSnapshot {
     let level: Int
     let xp: Int
+    let spentXP: Int
+    let currentXP: Int
     let xpForNextLevel: Int
     let xpProgress: Double
     let lifeScore: Int
@@ -67,16 +69,21 @@ enum ProgressService {
         return xp
     }
     
-    static func snapshot(habits: [Habit], tasks: [TaskItem], transactions: [Transaction], on date: Date, calendar: Calendar = .current) -> ProgressSnapshot {
+    static func snapshot(habits: [Habit], tasks: [TaskItem], transactions: [Transaction], rewards: [Reward] = [], on date: Date, calendar: Calendar = .current) -> ProgressSnapshot {
         let xp = totalXP(habits: habits, tasks: tasks, calendar: calendar)
         let level = 1 + (xp / 100)
         let xpInLevel = xp % 100
         let xpProgress = Double(xpInLevel) / 100.0
         let score = lifeScore(habits: habits, tasks: tasks, transactions: transactions, on: date, calendar: calendar)
         
+        let spentXp = rewards.filter { $0.redeemedAt != nil }.reduce(0) { $0 + $1.xpCost }
+        let currentXp = max(0, xp - spentXp)
+        
         return ProgressSnapshot(
             level: level,
             xp: xp,
+            spentXP: spentXp,
+            currentXP: currentXp,
             xpForNextLevel: 100,
             xpProgress: xpProgress,
             lifeScore: score

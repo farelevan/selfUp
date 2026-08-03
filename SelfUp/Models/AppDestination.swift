@@ -7,6 +7,7 @@ enum AppDestination: String, CaseIterable, AppEnum {
     case habits
     case money
     case tasks
+    case rewards
     case insights
     
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
@@ -19,6 +20,7 @@ enum AppDestination: String, CaseIterable, AppEnum {
             .habits: DisplayRepresentation(title: "Habits"),
             .money: DisplayRepresentation(title: "Money"),
             .tasks: DisplayRepresentation(title: "Tasks"),
+            .rewards: DisplayRepresentation(title: "Rewards"),
             .insights: DisplayRepresentation(title: "Insights")
         ]
     }
