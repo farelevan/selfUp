@@ -56,7 +56,7 @@ struct MoneyChartView: View {
     var body: some View {
         VStack(spacing: 20) {
             if !monthlyFlows.isEmpty {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Cash Flow Trend")
                         .font(.headline)
                     Chart(monthlyFlows) { flow in
@@ -75,25 +75,48 @@ struct MoneyChartView: View {
                 }
                 .padding()
                 .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             
             if !expenseByCategory.isEmpty {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Expense Breakdown")
                         .font(.headline)
-                    Chart(expenseByCategory) { share in
-                        BarMark(
-                            x: .value("Amount", Double(truncating: share.amount as NSDecimalNumber)),
-                            y: .value("Category", share.category)
-                        )
-                        .foregroundStyle(Color.red.opacity(0.8))
+                    
+                    HStack(spacing: 20) {
+                        // Donut/Pie Chart
+                        Chart(expenseByCategory) { share in
+                            SectorMark(
+                                angle: .value("Amount", Double(truncating: share.amount as NSDecimalNumber)),
+                                innerRadius: .ratio(0.6),
+                                angularInset: 1.5
+                            )
+                            .cornerRadius(4)
+                            .foregroundStyle(by: .value("Category", share.category))
+                        }
+                        .frame(width: 140, height: 140)
+                        
+                        // Custom Legend or Details
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(expenseByCategory.prefix(4)) { share in
+                                HStack {
+                                    Circle()
+                                        .frame(width: 8, height: 8)
+                                    Text(share.category)
+                                        .font(.caption)
+                                        .bold()
+                                    Spacer()
+                                    Text(share.amount, format: .number.precision(.fractionLength(0)))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
                     }
-                    .frame(height: min(300, max(120, Double(expenseByCategory.count) * 35)))
                 }
                 .padding()
                 .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
         }
     }

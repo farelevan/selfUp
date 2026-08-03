@@ -7,6 +7,8 @@ struct TasksView: View {
     
     @State private var showingEditor = false
     @State private var taskToEdit: TaskItem? = nil
+    @State private var showingSettings = false
+    @State private var selectedStatusFilter = 0 // 0 = Pending, 1 = Completed
     
     private let trackingService = TrackingService()
     
@@ -20,57 +22,63 @@ struct TasksView: View {
     
     var body: some View {
         NavigationStack {
-            Group {
-                if allTasks.isEmpty {
-                    ContentUnavailableView(
-                        "No Tasks",
-                        systemImage: "checklist",
-                        description: Text("Create a task to track your goals.")
-                    )
-                } else {
-                    List {
-                        if !pendingTasks.isEmpty {
-                            Section(header: Text("Pending")) {
-                                ForEach(pendingTasks) { task in
-                                    TaskRow(task: task, trackingService: trackingService)
-                                        .swipeActions(edge: .leading) {
-                                            Button {
-                                                taskToEdit = task
-                                            } label: {
-                                                Label("Edit", systemImage: "pencil")
-                                            }
-                                            .tint(.blue)
+            VStack(spacing: 0) {
+                // Filter Segmented Control
+                Picker("Status", selection: $selectedStatusFilter) {
+                    Text("Pending (\(pendingTasks.count))").tag(0)
+                    Text("Completed (\(completedTasks.count))").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                
+                Group {
+                    let displayedTasks = selectedStatusFilter == 0 ? pendingTasks : completedTasks
+                    
+                    if displayedTasks.isEmpty {
+                        Spacer()
+                        ContentUnavailableView(
+                            selectedStatusFilter == 0 ? "No Pending Tasks" : "No Completed Tasks",
+                            systemImage: "checkmark.seal",
+                            description: Text(selectedStatusFilter == 0 ? "You're all caught up! Create a task to track a goal." : "Tasks you complete will show up here.")
+                        )
+                        Spacer()
+                    } else {
+                        List {
+                            ForEach(displayedTasks) { task in
+                                TaskRow(task: task, trackingService: trackingService)
+                                    .listRowBackground(Color(.secondarySystemGroupedBackground))
+                                    .swipeActions(edge: .leading) {
+                                        Button {
+                                            taskToEdit = task
+                                        } label: {
+                                            Label("Edit", systemImage: "pencil")
                                         }
-                                        .swipeActions(edge: .trailing) {
-                                            Button(role: .destructive) {
-                                                delete(task)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
+                                        .tint(.blue)
+                                    }
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            delete(task)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
                                         }
-                                }
+                                    }
                             }
                         }
-                        
-                        if !completedTasks.isEmpty {
-                            Section(header: Text("Completed")) {
-                                ForEach(completedTasks) { task in
-                                    TaskRow(task: task, trackingService: trackingService)
-                                        .swipeActions(edge: .trailing) {
-                                            Button(role: .destructive) {
-                                                delete(task)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                        }
-                                }
-                            }
-                        }
+                        .scrollContentBackground(.hidden)
                     }
                 }
             }
+            .background(Color(.systemGroupedBackground))
+            .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Tasks")
             .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         showingEditor = true
@@ -84,6 +92,9 @@ struct TasksView: View {
             }
             .sheet(item: $taskToEdit) { task in
                 TaskEditorView(taskToEdit: task)
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
             }
         }
     }
@@ -112,30 +123,37 @@ struct TaskRow: View {
     }
     
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Button {
-                if isCompleted {
-                    task.completedAt = nil
-                } else {
-                    try? trackingService.toggleTask(task, on: Date(), context: modelContext)
+                withAnimation(.spring()) {
+                    if isCompleted {
+                        task.completedAt = nil
+                    } else {
+                        try? trackingService.toggleTask(task, on: Date(), context: modelContext)
+                    }
                 }
             } label: {
-                Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
+                Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.title3)
                     .foregroundStyle(isCompleted ? .green : .secondary)
             }
             .buttonStyle(.plain)
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(task.title)
                     .font(.body)
                     .strikethrough(isCompleted)
                     .foregroundStyle(isCompleted ? .secondary : .primary)
                 
-                HStack {
-                    Text(task.priority.rawValue.capitalized)
+                HStack(spacing: 6) {
+                    // Priority Pill
+                    Text(task.priority.rawValue.uppercased())
+                        .font(.system(size: 9, weight: .bold))
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(priorityColor.opacity(0.12))
                         .foregroundStyle(priorityColor)
-                        .bold()
+                        .clipShape(Capsule())
                     
                     if let dueDate = task.dueDate {
                         Text("•")
@@ -145,7 +163,7 @@ struct TaskRow: View {
                     Text("•")
                     Text("\(task.xpReward) XP")
                 }
-                .font(.caption)
+                .font(.caption2)
                 .foregroundStyle(.secondary)
             }
             

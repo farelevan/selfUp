@@ -14,6 +14,9 @@ struct TodayView: View {
     @Query private var tasks: [TaskItem]
     @Query private var transactions: [Transaction]
     
+    @State private var showingSettings = false
+    @State private var animateScore = false
+    
     private var activeHabits: [Habit] { habits.filter { !$0.isArchived } }
     
     private var completedHabitsCount: Int {
@@ -41,8 +44,6 @@ struct TodayView: View {
         UserDefaults.standard.string(forKey: "selected_currency") ?? "Rp"
     }
     
-    @State private var showingSettings = false
-
     private var activityData: [DailyActivity] {
         let calendar = Calendar.current
         var list: [DailyActivity] = []
@@ -58,128 +59,206 @@ struct TodayView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
-                    VStack(spacing: 8) {
-                        Text("LEVEL \(snapshot.level)")
-                            .font(.title2)
-                            .bold()
-                            .foregroundStyle(.blue)
-                        
-                        ProgressView(value: snapshot.xpProgress)
-                            .progressViewStyle(.linear)
-                            .tint(.blue)
-                        
-                        Text("\(snapshot.xp % 100) / 100 XP to next level (Total: \(snapshot.xp) XP)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .padding(.horizontal)
-                    
-                    HStack(spacing: 16) {
-                        ZStack {
-                            Circle()
-                                .stroke(Color.gray.opacity(0.2), lineWidth: 8)
-                                .frame(width: 80, height: 80)
-                            Circle()
-                                .trim(from: 0, to: CGFloat(snapshot.lifeScore) / 100.0)
-                                .stroke(
-                                    AngularGradient(colors: [.blue, .green, .blue], center: .center),
-                                    style: StrokeStyle(lineWidth: 8, lineCap: .round)
-                                )
-                                .rotationEffect(.degrees(-90))
-                                .frame(width: 80, height: 80)
-                            
-                            Text("\(snapshot.lifeScore)")
-                                .font(.title3)
-                                .bold()
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Today's Life Score")
-                                .font(.headline)
-                            Text("Consists of 50% habits, 40% tasks, and 10% cash flow tracking.")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .padding(.horizontal)
-                    
+                VStack(spacing: 20) {
+                    // Header Date
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Habit Completion")
+                            Text(Date().formatted(date: .complete, time: .omitted))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text("Welcome Back")
+                                .font(.largeTitle)
+                                .bold()
+                        }
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    
+                    // Level Progress Card
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                                .foregroundStyle(SelfUpStyle.goldGradient)
+                                .font(.title3)
+                            Text("LEVEL \(snapshot.level)")
                                 .font(.headline)
-                            Text("\(completedHabitsCount) of \(activeHabits.count) completed today")
+                                .bold()
+                            Spacer()
+                            Text("\(snapshot.xp) XP Total")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
-                        Spacer()
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.largeTitle)
-                            .foregroundStyle(completedHabitsCount == activeHabits.count && !activeHabits.isEmpty ? .green : .secondary)
+                        
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Color.gray.opacity(0.15))
+                                    .frame(height: 10)
+                                
+                                Capsule()
+                                    .fill(SelfUpStyle.progressGradient)
+                                    .frame(width: geo.size.width * CGFloat(snapshot.xpProgress), height: 10)
+                            }
+                        }
+                        .frame(height: 10)
+                        
+                        Text("\(100 - (snapshot.xp % 100)) XP left to Level \(snapshot.level + 1)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
                     .padding(.horizontal)
                     
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Today's Cash Flow")
-                            .font(.headline)
+                    // Life Score & Habit Grid Ring Row
+                    HStack(alignment: .center, spacing: 16) {
+                        // Life Score Circular Gauge
+                        VStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.gray.opacity(0.1), lineWidth: 10)
+                                    .frame(width: 90, height: 90)
+                                
+                                Circle()
+                                    .trim(from: 0, to: animateScore ? CGFloat(snapshot.lifeScore) / 100.0 : 0)
+                                    .stroke(
+                                        SelfUpStyle.lifeScoreGradient,
+                                        style: StrokeStyle(lineWidth: 10, lineCap: .round)
+                                    )
+                                    .rotationEffect(.degrees(-90))
+                                    .frame(width: 90, height: 90)
+                                    .animation(.easeOut(duration: 1.2), value: animateScore)
+                                
+                                Text("\(snapshot.lifeScore)")
+                                    .font(.title)
+                                    .bold()
+                            }
+                            Text("Life Score")
+                                .font(.caption)
+                                .bold()
+                                .foregroundStyle(.secondary)
+                        }
                         
-                        HStack {
-                            Text("Income: \(currencySymbol) \(moneySummaryToday.income, format: .number)")
-                                .foregroundStyle(.green)
-                            Spacer()
-                            Text("Expense: \(currencySymbol) \(moneySummaryToday.expenses, format: .number)")
-                                .foregroundStyle(.red)
+                        // Side Summary Metrics
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                                Text("Habits: \(completedHabitsCount)/\(activeHabits.count)")
+                            }
+                            HStack {
+                                Image(systemName: "list.bullet.rectangle.fill")
+                                    .foregroundStyle(.blue)
+                                Text("Focus Tasks: \(openTasksToday.count)")
+                            }
+                            HStack {
+                                Image(systemName: "indianrupeesign.circle.fill")
+                                    .foregroundStyle(.orange)
+                                Text("Net Flow: \(moneySummaryToday.net >= 0 ? "+" : "")\(moneySummaryToday.net, format: .number)")
+                            }
                         }
                         .font(.subheadline)
+                        .bold()
+                        
+                        Spacer()
                     }
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
+                    .padding(.horizontal)
+                    .onAppear {
+                        animateScore = true
+                    }
+                    
+                    // Habit Horizontal Quick Track
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Today's Habits")
+                            .font(.headline)
+                            .padding(.horizontal)
+                        
+                        if activeHabits.isEmpty {
+                            Text("No active habits created.")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal)
+                        } else {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    ForEach(activeHabits) { habit in
+                                        HabitQuickCell(habit: habit)
+                                    }
+                                }
+                                .padding(.horizontal)
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    }
+                    
+                    // Today's Money Card
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Today's Money Summary")
+                            .font(.headline)
+                        
+                        HStack(spacing: 20) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Income")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text("\(currencySymbol) \(moneySummaryToday.income, format: .number)")
+                                    .font(.subheadline)
+                                    .bold()
+                                    .foregroundStyle(.green)
+                            }
+                            Divider()
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Expenses")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text("\(currencySymbol) \(moneySummaryToday.expenses, format: .number)")
+                                    .font(.subheadline)
+                                    .bold()
+                                    .foregroundStyle(.red)
+                            }
+                            Spacer()
+                        }
+                    }
+                    .premiumCard()
                     .padding(.horizontal)
                     
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Tasks to Focus")
+                    // Task Focus list
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Today's Tasks Focus")
                             .font(.headline)
                         
                         if openTasksToday.isEmpty {
-                            Text("No urgent or high priority tasks due today.")
+                            Text("All clear! No tasks due today.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         } else {
                             ForEach(openTasksToday) { task in
                                 HStack {
-                                    Image(systemName: task.priority == .high ? "exclamationmark.circle.fill" : "circle")
-                                        .foregroundStyle(task.priority == .high ? .red : .orange)
+                                    Circle()
+                                        .fill(task.priority == .high ? Color.red : (task.priority == .medium ? Color.orange : Color.blue))
+                                        .frame(width: 8, height: 8)
+                                    
                                     Text(task.title)
+                                        .font(.subheadline)
+                                    
                                     Spacer()
+                                    
                                     if let due = task.dueDate {
                                         Text(due, style: .date)
                                             .font(.caption2)
                                             .foregroundStyle(.secondary)
                                     }
                                 }
-                                .font(.subheadline)
+                                .padding(.vertical, 4)
                             }
                         }
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
                     .padding(.horizontal)
                     
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("7-Day Consistency")
+                    // 7-day Area Chart
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("7-Day Life Score")
                             .font(.headline)
                         
                         Chart(activityData) { day in
@@ -195,26 +274,31 @@ struct TodayView: View {
                                 y: .value("Life Score", day.score)
                             )
                             .interpolationMethod(.catmullRom)
-                            .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.3), .blue.opacity(0.0)], startPoint: .top, endPoint: .bottom))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue.opacity(0.2), .blue.opacity(0.0)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
                         }
                         .frame(height: 120)
                         .chartYScale(domain: 0...100)
                     }
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
                     .padding(.horizontal)
                 }
                 .padding(.vertical)
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Today")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingSettings = true
                     } label: {
                         Image(systemName: "gearshape")
+                            .foregroundStyle(.primary)
                     }
                 }
             }
@@ -222,5 +306,57 @@ struct TodayView: View {
                 SettingsView()
             }
         }
+    }
+}
+
+struct HabitQuickCell: View {
+    let habit: Habit
+    @Environment(\.modelContext) private var modelContext
+    private let trackingService = TrackingService()
+    
+    private var isCompletedToday: Bool {
+        ProgressService.isCompleted(habit, on: Date())
+    }
+    
+    private var tintColor: Color {
+        switch habit.tintName {
+        case "green": return .green
+        case "orange": return .orange
+        case "purple": return .purple
+        case "red": return .red
+        case "teal": return .teal
+        case "indigo": return .indigo
+        default: return .blue
+        }
+    }
+    
+    var body: some View {
+        Button {
+            withAnimation(.spring()) {
+                _ = try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: habit.symbol)
+                    .font(.subheadline)
+                    .foregroundStyle(isCompletedToday ? .white : tintColor)
+                Text(habit.title)
+                    .font(.caption)
+                    .bold()
+                    .foregroundStyle(isCompletedToday ? .white : .primary)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isCompletedToday ? tintColor : Color(.secondarySystemGroupedBackground))
+                    .shadow(color: Color.black.opacity(0.02), radius: 4, x: 0, y: 2)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isCompletedToday ? Color.clear : Color.white.opacity(0.1), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }

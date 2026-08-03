@@ -59,13 +59,24 @@ struct InsightsView: View {
                             )
                             .foregroundStyle(.blue)
                             .interpolationMethod(.catmullRom)
+                            
+                            AreaMark(
+                                x: .value("Date", day.date, unit: .day),
+                                y: .value("Life Score", day.score)
+                            )
+                            .interpolationMethod(.catmullRom)
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue.opacity(0.15), .blue.opacity(0.0)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
                         }
                         .frame(height: 150)
                         .chartYScale(domain: 0...100)
                     }
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
                     .padding(.horizontal)
                     
                     VStack(alignment: .leading, spacing: 10) {
@@ -91,10 +102,7 @@ struct InsightsView: View {
                             }
                         }
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
                     .padding(.horizontal)
                     
                     VStack(alignment: .leading, spacing: 10) {
@@ -119,9 +127,7 @@ struct InsightsView: View {
                         }
                         .font(.subheadline)
                     }
-                    .padding()
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .premiumCard()
                     .padding(.horizontal)
                     
                     if !transactions.isEmpty {
