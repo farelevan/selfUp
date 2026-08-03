@@ -1,0 +1,43 @@
+name: SelfUp
+options:
+  bundleIdPrefix: com.farelevan.selfup
+targets:
+  SelfUp:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: SelfUp
+    settings:
+      base:
+        INFOPLIST_FILE: SelfUp/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.farelevan.selfup.SelfUp
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        DEVELOPMENT_TEAM: ""
+      configs:
+        debug:
+          CODE_SIGNING_REQUIRED: NO
+          CODE_SIGNING_ALLOWED: NO
+          CODE_SIGN_IDENTITY: ""
+        release:
+          CODE_SIGNING_REQUIRED: NO
+          CODE_SIGNING_ALLOWED: NO
+          CODE_SIGN_IDENTITY: ""
+  SelfUpTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: SelfUpTests
+    dependencies:
+      - target: SelfUp
+    settings:
+      configs:
+        debug:
+          CODE_SIGNING_REQUIRED: NO
+          CODE_SIGNING_ALLOWED: NO
+          CODE_SIGN_IDENTITY: ""
+        release:
+          CODE_SIGNING_REQUIRED: NO
+          CODE_SIGNING_ALLOWED: NO
+          CODE_SIGN_IDENTITY: ""

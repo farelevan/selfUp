@@ -1,0 +1,426 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		143D08B88343308CBD65EDD7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB793222637396AEB9774CD /* TaskItem.swift */; };
+		20DBE5C0B01ABAAB6722AF9A /* Habit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97C4A76CF01C96AD978852D8 /* Habit.swift */; };
+		6365A142CE57374088AB50F8 /* HabitCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205999761F1D4A20915DA509 /* HabitCompletion.swift */; };
+		BD387627CF1E201370373978 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275155BE81B22DDE59EFC9D9 /* Transaction.swift */; };
+		C6B3B7BDA5B298831319D8B0 /* ModelDefaultsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CEA40B7E058600EC43F1501 /* ModelDefaultsTests.swift */; };
+		F1CD98674BE84DE7E843F009 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0622E53EF097B7DE9FCF18 /* AppDestination.swift */; };
+		F3A1AD30CF5476E5ADD94243 /* SelfUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA368AFE08597B7DD7D0354 /* SelfUpApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9C212C4EAF78CC90D6D812BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7B0079C9C63E6F1C033BAB10 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B9CAF9836A64AFE2278601C3;
+			remoteInfo = SelfUp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0DA368AFE08597B7DD7D0354 /* SelfUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfUpApp.swift; sourceTree = "<group>"; };
+		205999761F1D4A20915DA509 /* HabitCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCompletion.swift; sourceTree = "<group>"; };
+		275155BE81B22DDE59EFC9D9 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		2899C59632096AD140200C57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3DD39426D615C75400F81057 /* SelfUp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SelfUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CEA40B7E058600EC43F1501 /* ModelDefaultsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDefaultsTests.swift; sourceTree = "<group>"; };
+		97C4A76CF01C96AD978852D8 /* Habit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Habit.swift; sourceTree = "<group>"; };
+		AB0622E53EF097B7DE9FCF18 /* AppDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDestination.swift; sourceTree = "<group>"; };
+		AEB793222637396AEB9774CD /* TaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
+		C76E8D5D810C7564B3873803 /* SelfUpTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SelfUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		6E9B7CDCA9A22B17F8CE5847 = {
+			isa = PBXGroup;
+			children = (
+				846E8151E4823DF90C56079B /* SelfUp */,
+				94BEBDB60F4E3DD320C87A67 /* SelfUpTests */,
+				7943AA39DE7E004BC6678120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7943AA39DE7E004BC6678120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3DD39426D615C75400F81057 /* SelfUp.app */,
+				C76E8D5D810C7564B3873803 /* SelfUpTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		83419AB0F777938F1FF702A6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AB0622E53EF097B7DE9FCF18 /* AppDestination.swift */,
+				97C4A76CF01C96AD978852D8 /* Habit.swift */,
+				205999761F1D4A20915DA509 /* HabitCompletion.swift */,
+				AEB793222637396AEB9774CD /* TaskItem.swift */,
+				275155BE81B22DDE59EFC9D9 /* Transaction.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		846E8151E4823DF90C56079B /* SelfUp */ = {
+			isa = PBXGroup;
+			children = (
+				2899C59632096AD140200C57 /* Info.plist */,
+				0DA368AFE08597B7DD7D0354 /* SelfUpApp.swift */,
+				83419AB0F777938F1FF702A6 /* Models */,
+			);
+			path = SelfUp;
+			sourceTree = "<group>";
+		};
+		94BEBDB60F4E3DD320C87A67 /* SelfUpTests */ = {
+			isa = PBXGroup;
+			children = (
+				5CEA40B7E058600EC43F1501 /* ModelDefaultsTests.swift */,
+			);
+			path = SelfUpTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A90FEFF3E38E203100B35D78 /* SelfUpTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 71A6B14318AA0FB0D934E282 /* Build configuration list for PBXNativeTarget "SelfUpTests" */;
+			buildPhases = (
+				A408B2907C38B4A4631F0BDC /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3DAEE89685693EB201FE0BA /* PBXTargetDependency */,
+			);
+			name = SelfUpTests;
+			packageProductDependencies = (
+			);
+			productName = SelfUpTests;
+			productReference = C76E8D5D810C7564B3873803 /* SelfUpTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B9CAF9836A64AFE2278601C3 /* SelfUp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4193B474FC9292A372C78033 /* Build configuration list for PBXNativeTarget "SelfUp" */;
+			buildPhases = (
+				A6A41302746C605C22E3E7C6 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SelfUp;
+			packageProductDependencies = (
+			);
+			productName = SelfUp;
+			productReference = 3DD39426D615C75400F81057 /* SelfUp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7B0079C9C63E6F1C033BAB10 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B9CAF9836A64AFE2278601C3 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 3056CC7FE282D46D638CEF5F /* Build configuration list for PBXProject "SelfUp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 6E9B7CDCA9A22B17F8CE5847;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7943AA39DE7E004BC6678120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B9CAF9836A64AFE2278601C3 /* SelfUp */,
+				A90FEFF3E38E203100B35D78 /* SelfUpTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A408B2907C38B4A4631F0BDC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C6B3B7BDA5B298831319D8B0 /* ModelDefaultsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6A41302746C605C22E3E7C6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1CD98674BE84DE7E843F009 /* AppDestination.swift in Sources */,
+				20DBE5C0B01ABAAB6722AF9A /* Habit.swift in Sources */,
+				6365A142CE57374088AB50F8 /* HabitCompletion.swift in Sources */,
+				F3A1AD30CF5476E5ADD94243 /* SelfUpApp.swift in Sources */,
+				143D08B88343308CBD65EDD7 /* TaskItem.swift in Sources */,
+				BD387627CF1E201370373978 /* Transaction.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D3DAEE89685693EB201FE0BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B9CAF9836A64AFE2278601C3 /* SelfUp */;
+			targetProxy = 9C212C4EAF78CC90D6D812BF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2559E0F05197C4EA6360A631 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3DAC85CB76FE8D9ADCE009C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup.SelfUpTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SelfUp.app/SelfUp";
+			};
+			name = Debug;
+		};
+		83481B93FFDFB5247F05C681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SelfUp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup.SelfUp;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9CE8722935F951BF1BE06B95 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup.SelfUpTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SelfUp.app/SelfUp";
+			};
+			name = Release;
+		};
+		E51405F290ECDBD8AE011F96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SelfUp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup.SelfUp;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F8968615551F13E17D7CEDB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3056CC7FE282D46D638CEF5F /* Build configuration list for PBXProject "SelfUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2559E0F05197C4EA6360A631 /* Debug */,
+				F8968615551F13E17D7CEDB5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4193B474FC9292A372C78033 /* Build configuration list for PBXNativeTarget "SelfUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83481B93FFDFB5247F05C681 /* Debug */,
+				E51405F290ECDBD8AE011F96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		71A6B14318AA0FB0D934E282 /* Build configuration list for PBXNativeTarget "SelfUpTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DAC85CB76FE8D9ADCE009C2 /* Debug */,
+				9CE8722935F951BF1BE06B95 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7B0079C9C63E6F1C033BAB10 /* Project object */;
+}
