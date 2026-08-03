@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct SelfUpApp: App {
+    @State private var router = AppRouter.shared
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Habit.self,
@@ -20,14 +22,46 @@ struct SelfUpApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(router: router)
         }
         .modelContainer(sharedModelContainer)
     }
 }
 
 struct ContentView: View {
+    @Bindable var router: AppRouter
+    
     var body: some View {
-        Text("SelfUp App Running")
+        TabView(selection: $router.destination) {
+            TodayView()
+                .tabItem {
+                    Label("Today", systemImage: "calendar")
+                }
+                .tag(AppDestination.today)
+            
+            HabitsView()
+                .tabItem {
+                    Label("Habits", systemImage: "checkmark.circle")
+                }
+                .tag(AppDestination.habits)
+            
+            MoneyView()
+                .tabItem {
+                    Label("Money", systemImage: "creditcard")
+                }
+                .tag(AppDestination.money)
+            
+            TasksView()
+                .tabItem {
+                    Label("Tasks", systemImage: "checklist")
+                }
+                .tag(AppDestination.tasks)
+            
+            InsightsView()
+                .tabItem {
+                    Label("Insights", systemImage: "chart.bar")
+                }
+                .tag(AppDestination.insights)
+        }
     }
 }
