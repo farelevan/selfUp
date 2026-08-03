@@ -1,0 +1,36 @@
+// !$*UTF8*$!
+{
+  archiveVersion = 1;
+  classes = {};
+  objectVersion = 77;
+  objects = {
+    A00000000000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfUpApp.swift; sourceTree = "<group>"; };
+    A00000000000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDefaultsTests.swift; sourceTree = "<group>"; };
+    A00000000000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Habit.swift; sourceTree = "<group>"; };
+    A00000000000000000000003 = {isa = PBXFileReference; explicitFileType = wrapper.application; path = SelfUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+    A00000000000000000000004 = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = SelfUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+    A00000000000000000000011 = {isa = PBXBuildFile; fileRef = A00000000000000000000001; };
+    A00000000000000000000012 = {isa = PBXBuildFile; fileRef = A00000000000000000000002; };
+    A00000000000000000000013 = {isa = PBXBuildFile; fileRef = A00000000000000000000005; };
+    A00000000000000000000020 = {isa = PBXGroup; children = (A00000000000000000000021, A00000000000000000000022, A00000000000000000000023); sourceTree = "<group>"; };
+    A00000000000000000000021 = {isa = PBXGroup; path = SelfUp; sourceTree = "<group>"; children = (A00000000000000000000001, A00000000000000000000005); };
+    A00000000000000000000022 = {isa = PBXGroup; path = SelfUpTests; sourceTree = "<group>"; children = (A00000000000000000000002); };
+    A00000000000000000000023 = {isa = PBXGroup; name = Products; sourceTree = "<group>"; children = (A00000000000000000000003, A00000000000000000000004); };
+    A00000000000000000000031 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000011, A00000000000000000000013); runOnlyForDeploymentPostprocessing = 0; };
+    A00000000000000000000032 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00000000000000000000012); runOnlyForDeploymentPostprocessing = 0; };
+    A00000000000000000000041 = {isa = PBXNativeTarget; name = SelfUp; productName = SelfUp; productReference = A00000000000000000000003; productType = "com.apple.product-type.application"; buildConfigurationList = A00000000000000000000051; buildPhases = (A00000000000000000000031); buildRules = (); dependencies = (); };
+    A00000000000000000000042 = {isa = PBXNativeTarget; name = SelfUpTests; productName = SelfUpTests; productReference = A00000000000000000000004; productType = "com.apple.product-type.bundle.unit-test"; buildConfigurationList = A00000000000000000000052; buildPhases = (A00000000000000000000032); buildRules = (); dependencies = (A00000000000000000000061); };
+    A00000000000000000000061 = {isa = PBXTargetDependency; target = A00000000000000000000041; };
+    A00000000000000000000051 = {isa = XCConfigurationList; defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; buildConfigurations = (A00000000000000000000071, A00000000000000000000072); };
+    A00000000000000000000052 = {isa = XCConfigurationList; defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; buildConfigurations = (A00000000000000000000073, A00000000000000000000074); };
+    A00000000000000000000071 = {isa = XCBuildConfiguration; name = Debug; buildSettings = { PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup; PRODUCT_NAME = SelfUp; SWIFT_VERSION = 5.0; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; TARGETED_DEVICE_FAMILY = 1; IPHONEOS_DEPLOYMENT_TARGET = 17.0; GENERATE_INFOPLIST_FILE = YES; ENABLE_TESTABILITY = YES; }; };
+    A00000000000000000000072 = {isa = XCBuildConfiguration; name = Release; buildSettings = { PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup; PRODUCT_NAME = SelfUp; SWIFT_VERSION = 5.0; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; TARGETED_DEVICE_FAMILY = 1; IPHONEOS_DEPLOYMENT_TARGET = 17.0; GENERATE_INFOPLIST_FILE = YES; }; };
+    A00000000000000000000073 = {isa = XCBuildConfiguration; name = Debug; buildSettings = { PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup.tests; PRODUCT_NAME = SelfUpTests; SWIFT_VERSION = 5.0; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; TARGETED_DEVICE_FAMILY = 1; IPHONEOS_DEPLOYMENT_TARGET = 17.0; GENERATE_INFOPLIST_FILE = YES; TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SelfUp.app/SelfUp"; BUNDLE_LOADER = "$(TEST_HOST)"; }; };
+    A00000000000000000000074 = {isa = XCBuildConfiguration; name = Release; buildSettings = { PRODUCT_BUNDLE_IDENTIFIER = com.farelevan.selfup.tests; PRODUCT_NAME = SelfUpTests; SWIFT_VERSION = 5.0; SDKROOT = iphoneos; SUPPORTED_PLATFORMS = "iphoneos iphonesimulator"; TARGETED_DEVICE_FAMILY = 1; IPHONEOS_DEPLOYMENT_TARGET = 17.0; GENERATE_INFOPLIST_FILE = YES; TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SelfUp.app/SelfUp"; BUNDLE_LOADER = "$(TEST_HOST)"; }; };
+    A00000000000000000000081 = {isa = XCConfigurationList; defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; buildConfigurations = (A00000000000000000000082, A00000000000000000000083); };
+    A00000000000000000000082 = {isa = XCBuildConfiguration; name = Debug; buildSettings = { }; };
+    A00000000000000000000083 = {isa = XCBuildConfiguration; name = Release; buildSettings = { }; };
+    A00000000000000000000090 = {isa = PBXProject; buildConfigurationList = A00000000000000000000081; compatibilityVersion = "Xcode 16.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base); mainGroup = A00000000000000000000020; productRefGroup = A00000000000000000000023; projectDirPath = ""; projectRoot = ""; targets = (A00000000000000000000041, A00000000000000000000042); };
+  };
+  rootObject = A00000000000000000000090;
+}
