@@ -86,13 +86,13 @@ struct TodayView: View {
                     }
                     .padding(.horizontal)
                     
-                    // Level Progress Card
+                    // Level Progress Bento Card
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             ZStack {
                                 Circle()
                                     .fill(SelfUpStyle.goldGradient)
-                                    .frame(width: 36, height: 36)
+                                    .frame(width: 38, height: 38)
                                 Image(systemName: "crown.fill")
                                     .foregroundStyle(.white)
                                     .font(.subheadline)
@@ -109,59 +109,64 @@ struct TodayView: View {
                             
                             Spacer()
                             
-                            Text("\(100 - (snapshot.xp % 100)) XP to Level \(snapshot.level + 1)")
-                                .font(.caption2)
-                                .fontWeight(.semibold)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.1)))
-                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            HStack(spacing: 4) {
+                                Image(systemName: "bolt.fill")
+                                    .font(.caption2)
+                                    .foregroundStyle(SelfUpStyle.cyberLime)
+                                Text("\(100 - (snapshot.xp % 100)) XP NEXT LEVEL")
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.15)))
+                            .foregroundStyle(SelfUpStyle.primaryIndigo)
                         }
                         
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
                                 Capsule()
                                     .fill(Color.primary.opacity(0.08))
-                                    .frame(height: 10)
+                                    .frame(height: 12)
                                 
                                 Capsule()
                                     .fill(SelfUpStyle.progressGradient)
-                                    .frame(width: max(12, geo.size.width * CGFloat(snapshot.xpProgress)), height: 10)
+                                    .frame(width: max(14, geo.size.width * CGFloat(snapshot.xpProgress)), height: 12)
+                                    .shadow(color: SelfUpStyle.cyberLime.opacity(0.4), radius: 6, x: 0, y: 2)
                                     .animation(.spring(response: 0.8, dampingFraction: 0.7), value: snapshot.xpProgress)
                             }
                         }
-                        .frame(height: 10)
+                        .frame(height: 12)
                     }
-                    .glowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 20)
+                    .cyberGlowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 24)
                     .padding(.horizontal)
                     
-                    // Life Score Circular Gauge & Status Card
+                    // Life Vibe Score Bento Gauge
                     HStack(alignment: .center, spacing: 20) {
                         // Life Score Circular Gauge
                         VStack(spacing: 6) {
                             ZStack {
                                 Circle()
-                                    .stroke(Color.primary.opacity(0.08), lineWidth: 12)
-                                    .frame(width: 100, height: 100)
+                                    .stroke(Color.primary.opacity(0.08), lineWidth: 14)
+                                    .frame(width: 104, height: 104)
                                 
                                 Circle()
                                     .trim(from: 0, to: animateScore ? CGFloat(snapshot.lifeScore) / 100.0 : 0)
                                     .stroke(
                                         SelfUpStyle.lifeScoreGradient,
-                                        style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                                        style: StrokeStyle(lineWidth: 14, lineCap: .round)
                                     )
                                     .rotationEffect(.degrees(-90))
-                                    .frame(width: 100, height: 100)
-                                    .shadow(color: Color.indigo.opacity(0.3), radius: 8, x: 0, y: 4)
+                                    .frame(width: 104, height: 104)
+                                    .shadow(color: SelfUpStyle.cyberLime.opacity(0.4), radius: 10, x: 0, y: 4)
                                     .animation(.spring(response: 1.2, dampingFraction: 0.8), value: animateScore)
                                 
                                 VStack(spacing: 0) {
                                     Text("\(snapshot.lifeScore)")
-                                        .font(.system(size: 30, weight: .bold, design: .rounded))
-                                    Text("SCORE")
-                                        .font(.system(size: 9, weight: .black))
-                                        .foregroundStyle(.secondary)
-                                        .tracking(1)
+                                        .font(.system(size: 32, weight: .black, design: .rounded))
+                                    Text("VIBE")
+                                        .font(.system(size: 10, weight: .black))
+                                        .foregroundStyle(SelfUpStyle.cyberLime)
+                                        .tracking(1.5)
                                 }
                             }
                         }
@@ -170,60 +175,60 @@ struct TodayView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack(spacing: 8) {
                                 ZStack {
-                                    Circle().fill(Color.emerald.opacity(0.15)).frame(width: 28, height: 28)
+                                    Circle().fill(SelfUpStyle.cyberLime.opacity(0.18)).frame(width: 30, height: 30)
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(Color.emerald)
-                                        .font(.caption)
+                                        .foregroundStyle(SelfUpStyle.cyberLime)
+                                        .font(.subheadline)
                                 }
                                 VStack(alignment: .leading, spacing: 0) {
                                     Text("Habits Done")
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                     Text("\(completedHabitsCount) of \(activeHabits.count)")
-                                        .font(.subheadline)
+                                        .font(.system(.subheadline, design: .rounded))
                                         .fontWeight(.bold)
                                 }
                             }
                             
                             HStack(spacing: 8) {
                                 ZStack {
-                                    Circle().fill(Color.indigo.opacity(0.15)).frame(width: 28, height: 28)
+                                    Circle().fill(SelfUpStyle.primaryIndigo.opacity(0.18)).frame(width: 30, height: 30)
                                     Image(systemName: "checklist")
                                         .foregroundStyle(SelfUpStyle.primaryIndigo)
-                                        .font(.caption)
+                                        .font(.subheadline)
                                 }
                                 VStack(alignment: .leading, spacing: 0) {
                                     Text("Focus Tasks")
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                     Text("\(openTasksToday.count) Pending")
-                                        .font(.subheadline)
+                                        .font(.system(.subheadline, design: .rounded))
                                         .fontWeight(.bold)
                                 }
                             }
                             
                             HStack(spacing: 8) {
                                 ZStack {
-                                    Circle().fill(Color.orange.opacity(0.15)).frame(width: 28, height: 28)
+                                    Circle().fill(SelfUpStyle.hyperMagenta.opacity(0.18)).frame(width: 30, height: 30)
                                     Image(systemName: "creditcard.fill")
-                                        .foregroundStyle(.orange)
-                                        .font(.caption)
+                                        .foregroundStyle(SelfUpStyle.hyperMagenta)
+                                        .font(.subheadline)
                                 }
                                 VStack(alignment: .leading, spacing: 0) {
                                     Text("Today Net")
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                     Text("\(moneySummaryToday.net >= 0 ? "+" : "")\(currencySymbol) \(moneySummaryToday.net, format: .number)")
-                                        .font(.subheadline)
+                                        .font(.system(.subheadline, design: .rounded))
                                         .fontWeight(.bold)
-                                        .foregroundStyle(moneySummaryToday.net >= 0 ? Color.emerald : Color.coral)
+                                        .foregroundStyle(moneySummaryToday.net >= 0 ? SelfUpStyle.cyberLime : SelfUpStyle.hyperMagenta)
                                 }
                             }
                         }
                         
                         Spacer()
                     }
-                    .premiumCard(cornerRadius: 20)
+                    .bentoCard(cornerRadius: 24)
                     .padding(.horizontal)
                     .onAppear {
                         animateScore = true
@@ -232,28 +237,34 @@ struct TodayView: View {
                     // Habit Horizontal Quick Track
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
-                            Text("Today's Habits")
+                            Text("Daily Habit Streak")
                                 .font(.system(.title3, design: .rounded))
                                 .fontWeight(.bold)
                             Spacer()
-                            Text("\(completedHabitsCount)/\(activeHabits.count)")
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.secondary)
+                            HStack(spacing: 4) {
+                                Image(systemName: "flame.fill")
+                                    .foregroundStyle(.orange)
+                                Text("\(completedHabitsCount)/\(activeHabits.count)")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(Color.orange.opacity(0.12)))
                         }
                         .padding(.horizontal)
                         
                         if activeHabits.isEmpty {
                             HStack {
-                                Image(systemName: "leaf.fill")
-                                    .foregroundStyle(Color.emerald)
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(SelfUpStyle.cyberLime)
                                 Text("No active habits created yet.")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemGroupedBackground)))
+                            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.secondarySystemGroupedBackground)))
                             .padding(.horizontal)
                         } else {
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -271,69 +282,69 @@ struct TodayView: View {
                     // Today's Money Card
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
-                            Text("Money Summary")
+                            Text("Money Flow")
                                 .font(.system(.title3, design: .rounded))
                                 .fontWeight(.bold)
                             Spacer()
                             Image(systemName: "dollarsign.circle.fill")
-                                .foregroundStyle(Color.emerald)
+                                .foregroundStyle(SelfUpStyle.cyberLime)
                         }
                         
                         HStack(spacing: 16) {
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "arrow.down.right.circle.fill")
-                                        .foregroundStyle(Color.emerald)
+                                        .foregroundStyle(SelfUpStyle.cyberLime)
                                         .font(.caption)
                                     Text("Income")
-                                        .font(.caption)
+                                        .font(.caption2)
                                         .foregroundStyle(.secondary)
                                 }
                                 Text("\(currencySymbol) \(moneySummaryToday.income, format: .number)")
                                     .font(.system(.headline, design: .rounded))
                                     .fontWeight(.bold)
-                                    .foregroundStyle(Color.emerald)
+                                    .foregroundStyle(SelfUpStyle.cyberLime)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
-                            .background(RoundedRectangle(cornerRadius: 14).fill(Color.emerald.opacity(0.08)))
+                            .background(RoundedRectangle(cornerRadius: 16).fill(SelfUpStyle.cyberLime.opacity(0.1)))
                             
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 4) {
                                     Image(systemName: "arrow.up.right.circle.fill")
-                                        .foregroundStyle(Color.coral)
+                                        .foregroundStyle(SelfUpStyle.hyperMagenta)
                                         .font(.caption)
                                     Text("Expenses")
-                                        .font(.caption)
+                                        .font(.caption2)
                                         .foregroundStyle(.secondary)
                                 }
                                 Text("\(currencySymbol) \(moneySummaryToday.expenses, format: .number)")
                                     .font(.system(.headline, design: .rounded))
                                     .fontWeight(.bold)
-                                    .foregroundStyle(Color.coral)
+                                    .foregroundStyle(SelfUpStyle.hyperMagenta)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
-                            .background(RoundedRectangle(cornerRadius: 14).fill(Color.coral.opacity(0.08)))
+                            .background(RoundedRectangle(cornerRadius: 16).fill(SelfUpStyle.hyperMagenta.opacity(0.1)))
                         }
                     }
-                    .premiumCard(cornerRadius: 20)
+                    .bentoCard(cornerRadius: 24)
                     .padding(.horizontal)
                     
                     // Task Focus List
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
-                            Text("Focus Tasks")
+                            Text("Focus Goals")
                                 .font(.system(.title3, design: .rounded))
                                 .fontWeight(.bold)
                             Spacer()
                             if !openTasksToday.isEmpty {
-                                Text("\(openTasksToday.count) Due")
+                                Text("\(openTasksToday.count) Due Today")
                                     .font(.caption)
                                     .fontWeight(.bold)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Capsule().fill(Color.indigo.opacity(0.1)))
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 5)
+                                    .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.15)))
                                     .foregroundStyle(SelfUpStyle.primaryIndigo)
                             }
                         }
@@ -342,12 +353,12 @@ struct TodayView: View {
                             HStack(spacing: 12) {
                                 Image(systemName: "checkmark.seal.fill")
                                     .font(.title2)
-                                    .foregroundStyle(Color.emerald)
+                                    .foregroundStyle(SelfUpStyle.cyberLime)
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("All Tasks Clear!")
+                                    Text("All Clear!")
                                         .font(.subheadline)
                                         .fontWeight(.bold)
-                                    Text("You've finished all focus tasks for today.")
+                                    Text("You've completed all tasks for today.")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -358,12 +369,12 @@ struct TodayView: View {
                                 ForEach(openTasksToday) { task in
                                     HStack(spacing: 12) {
                                         Capsule()
-                                            .fill(task.priority == .high ? Color.coral : (task.priority == .medium ? Color.orange : SelfUpStyle.primaryIndigo))
+                                            .fill(task.priority == .high ? SelfUpStyle.hyperMagenta : (task.priority == .medium ? Color.orange : SelfUpStyle.cyberCyan))
                                             .frame(width: 4, height: 24)
                                         
                                         Text(task.title)
-                                            .font(.subheadline)
-                                            .fontWeight(.medium)
+                                            .font(.system(.subheadline, design: .rounded))
+                                            .fontWeight(.bold)
                                         
                                         Spacer()
                                         
@@ -374,23 +385,23 @@ struct TodayView: View {
                                                 .foregroundStyle(.secondary)
                                         }
                                     }
-                                    .padding(10)
-                                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.primary.opacity(0.03)))
+                                    .padding(12)
+                                    .background(RoundedRectangle(cornerRadius: 16).fill(Color.primary.opacity(0.03)))
                                 }
                             }
                         }
                     }
-                    .premiumCard(cornerRadius: 20)
+                    .bentoCard(cornerRadius: 24)
                     .padding(.horizontal)
                     
                     // 7-Day Life Score Chart
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("7-Day Life Score Trend")
+                                Text("7-Day Vibe Trend")
                                     .font(.system(.headline, design: .rounded))
                                     .fontWeight(.bold)
-                                Text("Track your overall consistency")
+                                Text("Consistency trajectory")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -406,7 +417,7 @@ struct TodayView: View {
                             )
                             .interpolationMethod(.catmullRom)
                             .foregroundStyle(SelfUpStyle.primaryIndigo)
-                            .lineStyle(StrokeStyle(lineWidth: 3))
+                            .lineStyle(StrokeStyle(lineWidth: 3.5))
                             
                             AreaMark(
                                 x: .value("Date", day.date, unit: .day),
@@ -415,16 +426,16 @@ struct TodayView: View {
                             .interpolationMethod(.catmullRom)
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [SelfUpStyle.primaryIndigo.opacity(0.25), SelfUpStyle.primaryIndigo.opacity(0.0)],
+                                    colors: [SelfUpStyle.primaryIndigo.opacity(0.3), SelfUpStyle.primaryIndigo.opacity(0.0)],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
                             )
                         }
-                        .frame(height: 130)
+                        .frame(height: 135)
                         .chartYScale(domain: 0...100)
                     }
-                    .premiumCard(cornerRadius: 20)
+                    .cyberGlowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 24)
                     .padding(.horizontal)
                 }
                 .padding(.vertical)

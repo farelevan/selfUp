@@ -40,11 +40,11 @@ struct HabitsView: View {
                             // Habits Summary Metric Banner
                             HStack(spacing: 16) {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("TODAY'S PROGRESS")
+                                    Text("DAILY HABIT STREAK")
                                         .font(.caption2)
                                         .fontWeight(.bold)
                                         .foregroundStyle(SelfUpStyle.primaryIndigo)
-                                        .tracking(1)
+                                        .tracking(1.2)
                                     Text("\(completedTodayCount) of \(activeHabits.count) Done")
                                         .font(.system(.title3, design: .rounded))
                                         .fontWeight(.bold)
@@ -55,17 +55,18 @@ struct HabitsView: View {
                                 ZStack {
                                     Circle()
                                         .stroke(Color.primary.opacity(0.08), lineWidth: 6)
-                                        .frame(width: 50, height: 50)
+                                        .frame(width: 52, height: 52)
                                     Circle()
                                         .trim(from: 0, to: CGFloat(completionRate))
                                         .stroke(SelfUpStyle.incomeGradient, style: StrokeStyle(lineWidth: 6, lineCap: .round))
                                         .rotationEffect(.degrees(-90))
-                                        .frame(width: 50, height: 50)
+                                        .frame(width: 52, height: 52)
                                     Text("\(Int(completionRate * 100))%")
-                                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                                        .font(.system(size: 11, weight: .black, design: .rounded))
+                                        .foregroundStyle(SelfUpStyle.cyberLime)
                                 }
                             }
-                            .premiumCard(cornerRadius: 18)
+                            .bentoCard(cornerRadius: 24)
                             .padding(.horizontal)
                             
                             // Habit Cards Grid
