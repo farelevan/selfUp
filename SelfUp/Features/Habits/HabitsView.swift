@@ -16,42 +16,86 @@ struct HabitsView: View {
         GridItem(.flexible(), spacing: 16)
     ]
     
+    private var completedTodayCount: Int {
+        activeHabits.filter { ProgressService.isCompleted($0, on: Date()) }.count
+    }
+    
+    private var completionRate: Double {
+        guard !activeHabits.isEmpty else { return 0 }
+        return Double(completedTodayCount) / Double(activeHabits.count)
+    }
+    
     var body: some View {
         NavigationStack {
             Group {
                 if activeHabits.isEmpty {
                     ContentUnavailableView(
-                        "No Active Habits",
-                        systemImage: "checklist",
-                        description: Text("Create a daily habit to start building consistency.")
+                        "Build Your First Habit",
+                        systemImage: "flame.circle.fill",
+                        description: Text("Small daily habits lead to extraordinary long-term growth.")
                     )
                 } else {
                     ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(activeHabits) { habit in
-                                HabitCard(habit: habit, trackingService: trackingService)
-                                    .contextMenu {
-                                        Button {
-                                            habitToEdit = habit
-                                        } label: {
-                                            Label("Edit", systemImage: "pencil")
-                                        }
-                                        
-                                        Button {
-                                            archive(habit)
-                                        } label: {
-                                            Label("Archive", systemImage: "archivebox")
-                                        }
-                                        
-                                        Button(role: .destructive) {
-                                            delete(habit)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                    }
+                        VStack(spacing: 20) {
+                            // Habits Summary Metric Banner
+                            HStack(spacing: 16) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("TODAY'S PROGRESS")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                        .tracking(1)
+                                    Text("\(completedTodayCount) of \(activeHabits.count) Done")
+                                        .font(.system(.title3, design: .rounded))
+                                        .fontWeight(.bold)
+                                }
+                                
+                                Spacer()
+                                
+                                ZStack {
+                                    Circle()
+                                        .stroke(Color.primary.opacity(0.08), lineWidth: 6)
+                                        .frame(width: 50, height: 50)
+                                    Circle()
+                                        .trim(from: 0, to: CGFloat(completionRate))
+                                        .stroke(SelfUpStyle.incomeGradient, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                                        .rotationEffect(.degrees(-90))
+                                        .frame(width: 50, height: 50)
+                                    Text("\(Int(completionRate * 100))%")
+                                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                                }
                             }
+                            .premiumCard(cornerRadius: 18)
+                            .padding(.horizontal)
+                            
+                            // Habit Cards Grid
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(activeHabits) { habit in
+                                    HabitCard(habit: habit, trackingService: trackingService)
+                                        .contextMenu {
+                                            Button {
+                                                habitToEdit = habit
+                                            } label: {
+                                                Label("Edit Habit", systemImage: "pencil")
+                                            }
+                                            
+                                            Button {
+                                                archive(habit)
+                                            } label: {
+                                                Label("Archive", systemImage: "archivebox")
+                                            }
+                                            
+                                            Button(role: .destructive) {
+                                                delete(habit)
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                        }
+                                }
+                            }
+                            .padding(.horizontal)
                         }
-                        .padding()
+                        .padding(.vertical)
                     }
                 }
             }
@@ -69,7 +113,9 @@ struct HabitsView: View {
                     Button {
                         showingEditor = true
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(SelfUpStyle.primaryIndigo)
                     }
                 }
             }
@@ -111,13 +157,13 @@ struct HabitCard: View {
     
     private var tintColor: Color {
         switch habit.tintName {
-        case "green": return .green
+        case "green": return .emerald
         case "orange": return .orange
         case "purple": return .purple
-        case "red": return .red
+        case "red": return .coral
         case "teal": return .teal
-        case "indigo": return .indigo
-        default: return .blue
+        case "indigo": return SelfUpStyle.primaryIndigo
+        default: return SelfUpStyle.primaryIndigo
         }
     }
     
@@ -132,14 +178,14 @@ struct HabitCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Icon & Action row
+            // Icon & Toggle Row
             HStack {
                 ZStack {
                     Circle()
-                        .fill(isCompletedToday ? tintColor : tintColor.opacity(0.15))
+                        .fill(isCompletedToday ? tintColor : tintColor.opacity(0.12))
                         .frame(width: 44, height: 44)
                     Image(systemName: habit.symbol)
-                        .font(.headline)
+                        .font(.title3)
                         .foregroundStyle(isCompletedToday ? .white : tintColor)
                 }
                 Spacer()
@@ -147,47 +193,76 @@ struct HabitCard: View {
                 Button {
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
                         _ = try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)
+                        if !isCompletedToday {
+                            Haptics.success()
+                        } else {
+                            Haptics.light()
+                        }
                     }
                 } label: {
-                    Image(systemName: isCompletedToday ? "checkmark.circle.fill" : "circle")
-                        .font(.title2)
-                        .foregroundStyle(isCompletedToday ? .green : .secondary)
+                    ZStack {
+                        Circle()
+                            .fill(isCompletedToday ? Color.emerald : Color.primary.opacity(0.06))
+                            .frame(width: 32, height: 32)
+                        Image(systemName: isCompletedToday ? "checkmark" : "plus")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(isCompletedToday ? .white : .secondary)
+                    }
                 }
-                .buttonStyle(.plain)
+                .pressableScale(scale: 0.88)
             }
             
             // Text Details
             VStack(alignment: .leading, spacing: 4) {
                 Text(habit.title)
-                    .font(.headline)
+                    .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
                     .lineLimit(1)
                 
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     if currentStreak > 0 {
-                        Image(systemName: "flame.fill")
-                            .foregroundStyle(.orange)
-                        Text("\(currentStreak) day streak")
+                        HStack(spacing: 3) {
+                            Image(systemName: "flame.fill")
+                                .foregroundStyle(.orange)
+                            Text("\(currentStreak)d streak")
+                        }
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(Capsule().fill(Color.orange.opacity(0.12)))
+                        .foregroundStyle(.orange)
                     } else {
-                        Text("\(habit.xpReward) XP reward")
+                        Text("+\(habit.xpReward) XP")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
+                            .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.1)))
+                            .foregroundStyle(SelfUpStyle.primaryIndigo)
                     }
                 }
-                .font(.caption)
-                .bold()
-                .foregroundStyle(.secondary)
             }
             
-            // Mini 7-day grid representation
+            // 7-day Dot Matrix
             HStack(spacing: 4) {
                 ForEach(0..<7) { index in
-                    Circle()
-                        .fill(last7DaysCompletions[index] ? tintColor : Color.gray.opacity(0.2))
-                        .frame(width: 8, height: 8)
+                    Capsule()
+                        .fill(last7DaysCompletions[index] ? tintColor : Color.primary.opacity(0.1))
+                        .frame(height: 5)
                 }
             }
         }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color(white: 0, opacity: 0.03), radius: 6, x: 0, y: 3)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color(.secondarySystemGroupedBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 4)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(isCompletedToday ? tintColor.opacity(0.4) : Color.primary.opacity(0.06), lineWidth: 1.5)
+        )
     }
 }
+

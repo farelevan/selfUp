@@ -1,0 +1,23 @@
+{
+  "/Users/farelevan/dev/selfUp/SelfUp/AppIntents/SelfUpShortcuts.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Money/SavingGoalFundView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/SelfUpApp.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.swiftdeps"
+  }
+}

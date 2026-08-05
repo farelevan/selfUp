@@ -1,0 +1,319 @@
+{
+  "" : {
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUp-primary.dia",
+    "emit-module-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUp-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUp-primary-emit-module.dia",
+    "pch" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUp-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUp-primary.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/AppIntents/CompleteHabitIntent.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/CompleteHabitIntent~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/AppIntents/LogExpenseIntent.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/LogExpenseIntent~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/AppIntents/OpenSectionIntent.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/OpenSectionIntent~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/AppIntents/SelfUpShortcuts.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpShortcuts~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Habits/HabitEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Habits/HabitsView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Insights/InsightsView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/InsightsView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Money/MoneyChartView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyChartView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Money/MoneyView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneyView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Money/SavingGoalEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalEditorView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Money/SavingGoalFundView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoalFundView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Money/TransactionEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TransactionEditorView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Rewards/RewardEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardEditorView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Rewards/RewardsView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/RewardsView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Settings/SettingsView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Shared/SelfUpStyle.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Tasks/TaskEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Tasks/TasksView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TasksView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Today/TodayView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TodayView~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/AppDestination.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/AppDestination~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/Habit.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Habit~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/HabitCompletion.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/Reward.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Reward~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/SavingGoal.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SavingGoal~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/TaskItem.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskItem~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/Transaction.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/Transaction~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/SelfUpApp.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpApp~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Services/BackupService.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/BackupService~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Services/MoneySummaryService.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/MoneySummaryService~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Services/ProgressService.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/ProgressService~partial.swiftmodule"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Services/TrackingService.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.dia",
+    "index-unit-output-path" : "/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.o",
+    "llvm-bc" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.bc",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService.swiftdeps",
+    "swiftmodule" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TrackingService~partial.swiftmodule"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "tables" : {
+    "AppShortcuts" : [
+      {
+        "key" : "Log an expense in ${applicationName}",
+        "location" : {
+          "startingColumn" : 0,
+          "startingLine" : 4
+        },
+        "appShortcutMetadata" : [
+          {
+            "parameterDisplayRepresentations" : {
+
+            },
+            "actionIdentifier" : "LogExpenseIntent",
+            "title" : "Log Expense",
+            "parameterTypes" : {
+
+            },
+            "index" : 0
+          }
+        ],
+        "values" : [
+          "Log an expense in ${applicationName}",
+          "Track spending in ${applicationName}"
+        ]
+      },
+      {
+        "key" : "Complete habit in ${applicationName}",
+        "location" : {
+          "startingColumn" : 0,
+          "startingLine" : 4
+        },
+        "appShortcutMetadata" : [
+          {
+            "parameterDisplayRepresentations" : {
+              "HabitEntity" : [
+                "Habit"
+              ]
+            },
+            "actionIdentifier" : "CompleteHabitIntent",
+            "title" : "Complete Habit",
+            "parameterTypes" : {
+              "habit" : "HabitEntity"
+            },
+            "index" : 1
+          }
+        ],
+        "values" : [
+          "Complete habit in ${applicationName}",
+          "Check off habit in ${applicationName}"
+        ]
+      },
+      {
+        "key" : "Open section in ${applicationName}",
+        "location" : {
+          "startingColumn" : 0,
+          "startingLine" : 4
+        },
+        "appShortcutMetadata" : [
+          {
+            "parameterDisplayRepresentations" : {
+              "AppDestination" : [
+                "Today",
+                "Habits",
+                "Money",
+                "Tasks",
+                "Rewards",
+                "Insights"
+              ]
+            },
+            "actionIdentifier" : "OpenSectionIntent",
+            "title" : "Open SelfUp Section",
+            "parameterTypes" : {
+              "destination" : "AppDestination"
+            },
+            "index" : 2
+          }
+        ],
+        "values" : [
+          "Open section in ${applicationName}",
+          "Show tab in ${applicationName}"
+        ]
+      }
+    ]
+  },
+  "source" : "\/Users\/farelevan\/dev\/selfUp\/SelfUp\/AppIntents\/SelfUpShortcuts.swift",
+  "version" : 2
+}

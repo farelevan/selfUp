@@ -1,0 +1,23 @@
+{
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Habits/HabitEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitEditorView.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Habits/HabitsView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitsView.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Models/HabitCompletion.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/HabitCompletion.swiftdeps"
+  }
+}

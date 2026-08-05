@@ -42,70 +42,95 @@ struct MoneyView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("NET FLOW THIS MONTH")
-                                    .font(.caption)
-                                    .bold()
-                                    .foregroundStyle(.secondary)
+                                    .font(.caption2)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                    .tracking(1)
                                 
                                 Text("\(currencySymbol) \(summary.net, format: .number.precision(.fractionLength(0...2)))")
-                                    .font(.system(size: 32, weight: .black, design: .rounded))
-                                    .foregroundStyle(summary.net >= 0 ? .green : .red)
+                                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                                    .foregroundStyle(summary.net >= 0 ? Color.emerald : Color.coral)
                             }
                             Spacer()
+                            
+                            ZStack {
+                                Circle()
+                                    .fill((summary.net >= 0 ? Color.emerald : Color.coral).opacity(0.12))
+                                    .frame(width: 44, height: 44)
+                                Image(systemName: summary.net >= 0 ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
+                                    .font(.title2)
+                                    .foregroundStyle(summary.net >= 0 ? Color.emerald : Color.coral)
+                            }
                         }
                         
                         // Side-by-side meters
-                        HStack(spacing: 20) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Total Income")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "arrow.down.left.circle.fill")
+                                        .foregroundStyle(Color.emerald)
+                                        .font(.caption)
+                                    Text("Income")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
                                 Text("\(currencySymbol) \(summary.income, format: .number)")
-                                    .font(.headline)
-                                    .bold()
-                                    .foregroundStyle(.green)
+                                    .font(.system(.headline, design: .rounded))
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color.emerald)
                             }
-                            Divider()
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Total Expenses")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(10)
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.emerald.opacity(0.08)))
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "arrow.up.right.circle.fill")
+                                        .foregroundStyle(Color.coral)
+                                        .font(.caption)
+                                }
+                                Text("Expenses")
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                                 Text("\(currencySymbol) \(summary.expenses, format: .number)")
-                                    .font(.headline)
-                                    .bold()
-                                    .foregroundStyle(.red)
+                                    .font(.system(.headline, design: .rounded))
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color.coral)
                             }
-                            Spacer()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(10)
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.coral.opacity(0.08)))
                         }
-                        .frame(height: 40)
                         
                         // Progress bar representing Expense / Income ratio
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
-                                Text("Expense vs Income Gauge")
+                                Text("Expense Ratio")
                                     .font(.caption2)
-                                    .bold()
+                                    .fontWeight(.bold)
                                     .foregroundStyle(.secondary)
                                 Spacer()
                                 Text("\(expenseRatio * 100, format: .number.precision(.fractionLength(0)))%")
                                     .font(.caption2)
-                                    .bold()
-                                    .foregroundStyle(expenseRatio > 0.8 ? .red : (expenseRatio > 0.5 ? .orange : .green))
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(expenseRatio > 0.8 ? Color.coral : (expenseRatio > 0.5 ? Color.orange : Color.emerald))
                             }
                             
                             GeometryReader { geo in
                                 ZStack(alignment: .leading) {
                                     Capsule()
-                                        .fill(Color.gray.opacity(0.1))
+                                        .fill(Color.primary.opacity(0.08))
                                         .frame(height: 8)
                                     Capsule()
-                                        .fill(expenseRatio > 0.8 ? Color.red : (expenseRatio > 0.5 ? Color.orange : Color.green))
-                                        .frame(width: geo.size.width * CGFloat(expenseRatio), height: 8)
+                                        .fill(expenseRatio > 0.8 ? Color.coral : (expenseRatio > 0.5 ? Color.orange : Color.emerald))
+                                        .frame(width: max(8, geo.size.width * CGFloat(expenseRatio)), height: 8)
+                                        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: expenseRatio)
                                 }
                             }
                             .frame(height: 8)
                         }
                     }
-                    .premiumCard()
+                    .glowingCard(color: summary.net >= 0 ? Color.emerald : Color.coral, cornerRadius: 20)
                     .padding(.horizontal)
                     
                     // Donut Chart & Category breakdown
@@ -115,69 +140,82 @@ struct MoneyView: View {
                     }
                     
                     // Saving Goals Section
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             Text("Saving Goals")
-                                .font(.headline)
+                                .font(.system(.title3, design: .rounded))
+                                .fontWeight(.bold)
                             Spacer()
                             Button {
                                 showingGoalEditor = true
                             } label: {
-                                Image(systemName: "plus.circle")
+                                Image(systemName: "plus.circle.fill")
                                     .font(.title3)
+                                    .foregroundStyle(SelfUpStyle.primaryIndigo)
                             }
                         }
                         .padding(.horizontal)
                         
                         if savingGoals.isEmpty {
-                            VStack(spacing: 8) {
-                                Text("No saving goals set.")
+                            VStack(spacing: 12) {
+                                Image(systemName: "target")
+                                    .font(.largeTitle)
+                                    .foregroundStyle(SelfUpStyle.primaryIndigo.opacity(0.6))
+                                Text("Set your first saving goal")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                Button("Add Saving Goal") {
+                                Button {
                                     showingGoalEditor = true
+                                } label: {
+                                    Text("Add Goal")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Capsule().fill(SelfUpStyle.primaryIndigo))
+                                        .foregroundStyle(.white)
                                 }
-                                .font(.subheadline)
-                                .bold()
+                                .pressableScale()
                             }
                             .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(.secondarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .padding(.vertical, 24)
+                            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.secondarySystemGroupedBackground)))
                             .padding(.horizontal)
                         } else {
                             VStack(spacing: 12) {
                                 ForEach(savingGoals) { goal in
                                     let progress = goal.targetAmount > 0 ? min(1.0, Double(truncating: (goal.currentAmount / goal.targetAmount) as NSDecimalNumber)) : 0.0
                                     
-                                    VStack(alignment: .leading, spacing: 10) {
+                                    VStack(alignment: .leading, spacing: 12) {
                                         HStack {
-                                            Text(goal.title)
-                                                .font(.subheadline)
-                                                .bold()
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(goal.title)
+                                                    .font(.system(.headline, design: .rounded))
+                                                    .fontWeight(.bold)
+                                                Text("\(currencySymbol) \(goal.currentAmount, format: .number) of \(currencySymbol) \(goal.targetAmount, format: .number)")
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                            }
                                             Spacer()
                                             Text("\(progress * 100, format: .number.precision(.fractionLength(0)))%")
-                                                .font(.caption)
-                                                .bold()
-                                                .foregroundStyle(.blue)
+                                                .font(.system(.callout, design: .rounded))
+                                                .fontWeight(.bold)
+                                                .foregroundStyle(SelfUpStyle.primaryIndigo)
                                         }
                                         
                                         GeometryReader { geo in
                                             ZStack(alignment: .leading) {
                                                 Capsule()
-                                                    .fill(Color.gray.opacity(0.1))
-                                                    .frame(height: 6)
+                                                    .fill(Color.primary.opacity(0.08))
+                                                    .frame(height: 8)
                                                 Capsule()
-                                                    .fill(Color.blue)
-                                                    .frame(width: geo.size.width * CGFloat(progress), height: 6)
+                                                    .fill(SelfUpStyle.heroGradient)
+                                                    .frame(width: max(8, geo.size.width * CGFloat(progress)), height: 8)
                                             }
                                         }
-                                        .frame(height: 6)
+                                        .frame(height: 8)
                                         
                                         HStack {
-                                            Text("\(currencySymbol) \(goal.currentAmount, format: .number) / \(currencySymbol) \(goal.targetAmount, format: .number)")
-                                                .font(.caption2)
-                                                .foregroundStyle(.secondary)
                                             Spacer()
                                             
                                             Button {
@@ -185,22 +223,28 @@ struct MoneyView: View {
                                             } label: {
                                                 HStack(spacing: 4) {
                                                     Image(systemName: "plus")
-                                                    Text("Add Funds")
+                                                    Text("Deposit")
                                                 }
-                                                .font(.caption2)
-                                                .bold()
-                                                .padding(.horizontal, 8)
-                                                .padding(.vertical, 4)
-                                                .background(Color.blue.opacity(0.1))
-                                                .foregroundStyle(.blue)
-                                                .clipShape(Capsule())
+                                                .font(.caption)
+                                                .fontWeight(.bold)
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 6)
+                                                .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.12)))
+                                                .foregroundStyle(SelfUpStyle.primaryIndigo)
                                             }
-                                            .buttonStyle(.plain)
+                                            .pressableScale(scale: 0.92)
                                         }
                                     }
-                                    .padding()
-                                    .background(Color(.secondarySystemGroupedBackground))
-                                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                                    .padding(14)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 18)
+                                            .fill(Color(.secondarySystemGroupedBackground))
+                                            .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 3)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 18)
+                                            .stroke(Color.primary.opacity(0.06), lineWidth: 1)
+                                    )
                                     .contextMenu {
                                         Button {
                                             goalToEdit = goal
@@ -221,23 +265,25 @@ struct MoneyView: View {
                     }
                     
                     // Recent Transactions List
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 14) {
                         Text("This Month's Transactions")
-                            .font(.headline)
+                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
                             .padding(.horizontal)
                         
                         if currentMonthTransactions.isEmpty {
                             ContentUnavailableView(
                                 "No Transactions",
                                 systemImage: "creditcard",
-                                description: Text("Log an income or expense to see the cash flow summary.")
+                                description: Text("Log income or expenses to visualize your monthly cash flow.")
                             )
-                            .padding(.vertical, 40)
+                            .padding(.vertical, 30)
                         } else {
                             VStack(spacing: 0) {
                                 ForEach(currentMonthTransactions) { tx in
                                     TransactionRow(transaction: tx, currencySymbol: currencySymbol)
-                                        .padding()
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 12)
                                         .background(Color(.secondarySystemGroupedBackground))
                                         .swipeActions(edge: .leading) {
                                             Button {
@@ -245,7 +291,7 @@ struct MoneyView: View {
                                             } label: {
                                                 Label("Edit", systemImage: "pencil")
                                             }
-                                            .tint(.blue)
+                                            .tint(SelfUpStyle.primaryIndigo)
                                         }
                                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                             Button(role: .destructive) {
@@ -260,7 +306,7 @@ struct MoneyView: View {
                                     }
                                 }
                             }
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                             .padding(.horizontal)
                         }
                     }
@@ -282,7 +328,9 @@ struct MoneyView: View {
                     Button {
                         showingEditor = true
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(SelfUpStyle.primaryIndigo)
                     }
                 }
             }
@@ -330,31 +378,32 @@ struct TransactionRow: View {
         HStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill(isIncome ? Color.green.opacity(0.12) : Color.red.opacity(0.12))
-                    .frame(width: 40, height: 40)
+                    .fill(isIncome ? Color.emerald.opacity(0.12) : Color.coral.opacity(0.12))
+                    .frame(width: 42, height: 42)
                 Image(systemName: isIncome ? "arrow.down.left.circle.fill" : "arrow.up.right.circle.fill")
-                    .font(.headline)
-                    .foregroundStyle(isIncome ? Color.green : Color.red)
+                    .font(.title3)
+                    .foregroundStyle(isIncome ? Color.emerald : Color.coral)
             }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(transaction.category)
-                    .font(.subheadline)
-                    .bold()
+                    .font(.system(.subheadline, design: .rounded))
+                    .fontWeight(.bold)
                 if !transaction.note.isEmpty {
                     Text(transaction.note)
-                        .font(.caption2)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
             }
             
             Spacer()
             
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: 2) {
                 Text("\(isIncome ? "+" : "-")\(currencySymbol) \(transaction.amount, format: .number.precision(.fractionLength(0...2)))")
-                    .font(.subheadline)
-                    .bold()
-                    .foregroundStyle(isIncome ? Color.green : Color.primary)
+                    .font(.system(.subheadline, design: .rounded))
+                    .fontWeight(.bold)
+                    .foregroundStyle(isIncome ? Color.emerald : .primary)
                 Text(transaction.date, style: .date)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -362,3 +411,4 @@ struct TransactionRow: View {
         }
     }
 }
+

@@ -1,0 +1,23 @@
+{
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Settings/SettingsView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SettingsView.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Shared/SelfUpStyle.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/SelfUpStyle.swiftdeps"
+  },
+  "/Users/farelevan/dev/selfUp/SelfUp/Features/Tasks/TaskEditorView.swift" : {
+    "const-values" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.swiftconstvalues",
+    "dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.d",
+    "diagnostics" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.dia",
+    "object" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.o",
+    "swift-dependencies" : "/Users/farelevan/dev/selfUp/build/Build/Intermediates.noindex/SelfUp.build/Debug-iphonesimulator/SelfUp.build/Objects-normal/arm64/TaskEditorView.swiftdeps"
+  }
+}

@@ -27,6 +27,7 @@
 		6C15981B370E4E284BFFB810 /* SavingGoalEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD47CC7643DC5D6394C60C7 /* SavingGoalEditorView.swift */; };
 		83AF914394CF9595D47A80A8 /* MoneySummaryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B32BC02C092B52AAA9807E9 /* MoneySummaryService.swift */; };
 		874BA553638803EEE1C2449E /* TransactionEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0F00A3D12CE0A00698AE12 /* TransactionEditorView.swift */; };
+		8906686E14EEACA98F2121D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02CD94DF7789ED153F5DEFDB /* Assets.xcassets */; };
 		8CF90AD2B7D7D6AC08DEE56E /* CompleteHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B58B542B7FBE1ED459C166 /* CompleteHabitIntent.swift */; };
 		958EDDCA0A496518398CBA2F /* ProgressService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A27DC9623AD0E83746D8AA /* ProgressService.swift */; };
 		9699A36B1A871FF416395A68 /* TaskEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB6674D1F432E0AB06073A /* TaskEditorView.swift */; };
@@ -42,6 +43,8 @@
 		C927C42B389860E135A68AC5 /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04238EA6B449A8493ADDE231 /* RewardsView.swift */; };
 		D73C72026DAF8B905C0B65CF /* SelfUpShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9145D79AEDDFFC76EA93F5 /* SelfUpShortcuts.swift */; };
 		E063FC8298419FB88F993DD3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0860E118ABF6C974116CB75A /* SettingsView.swift */; };
+		E07A15019CFA2D935A381333 /* SelfUpLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CB7C22B2CAEF7FAD8B05C9 /* SelfUpLogoView.swift */; };
+		F116EB702946DCC1D9BCB58E /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCFE60D6111D6C86B4D9FE9 /* SplashScreenView.swift */; };
 		F1CD98674BE84DE7E843F009 /* AppDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0622E53EF097B7DE9FCF18 /* AppDestination.swift */; };
 		F2167926CD197AC31A54D6BC /* AppIntentRoutingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDEEB0E3FE6730B468D7989 /* AppIntentRoutingTests.swift */; };
 		F3A1AD30CF5476E5ADD94243 /* SelfUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA368AFE08597B7DD7D0354 /* SelfUpApp.swift */; };
@@ -60,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		0001CDD02117F27710D0B7CF /* MoneyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyChartView.swift; sourceTree = "<group>"; };
+		02CD94DF7789ED153F5DEFDB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04238EA6B449A8493ADDE231 /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsView.swift; sourceTree = "<group>"; };
 		04C2D3BD7627072035421FEA /* MoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyView.swift; sourceTree = "<group>"; };
 		0860E118ABF6C974116CB75A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -72,6 +76,7 @@
 		275155BE81B22DDE59EFC9D9 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		2899C59632096AD140200C57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2AD940C45CADB1D8EFF20B3A /* SelfUpStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfUpStyle.swift; sourceTree = "<group>"; };
+		38CB7C22B2CAEF7FAD8B05C9 /* SelfUpLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfUpLogoView.swift; sourceTree = "<group>"; };
 		3B00D8F94E696CBE8F558A7C /* BackupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupServiceTests.swift; sourceTree = "<group>"; };
 		3C0F00A3D12CE0A00698AE12 /* TransactionEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEditorView.swift; sourceTree = "<group>"; };
 		3DD39426D615C75400F81057 /* SelfUp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SelfUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +87,7 @@
 		6D95DC1E267317981DAEB532 /* MoneySummaryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneySummaryServiceTests.swift; sourceTree = "<group>"; };
 		73D28C1DF124FD25163CF8DC /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		77F7BA62F59D238B65905DF7 /* OpenSectionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSectionIntent.swift; sourceTree = "<group>"; };
+		7CCFE60D6111D6C86B4D9FE9 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		7DDEEB0E3FE6730B468D7989 /* AppIntentRoutingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntentRoutingTests.swift; sourceTree = "<group>"; };
 		84D429613A4D918CBB661E00 /* HabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsView.swift; sourceTree = "<group>"; };
 		8AFD5AB8F25D7B5A146861AD /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
@@ -115,7 +121,9 @@
 		2CBF323759614F8AEAED12BA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				38CB7C22B2CAEF7FAD8B05C9 /* SelfUpLogoView.swift */,
 				2AD940C45CADB1D8EFF20B3A /* SelfUpStyle.swift */,
+				7CCFE60D6111D6C86B4D9FE9 /* SplashScreenView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -155,6 +163,7 @@
 		846E8151E4823DF90C56079B /* SelfUp */ = {
 			isa = PBXGroup;
 			children = (
+				02CD94DF7789ED153F5DEFDB /* Assets.xcassets */,
 				2899C59632096AD140200C57 /* Info.plist */,
 				0DA368AFE08597B7DD7D0354 /* SelfUpApp.swift */,
 				BD283F1D4E79377AA4877993 /* AppIntents */,
@@ -298,6 +307,7 @@
 			buildConfigurationList = 4193B474FC9292A372C78033 /* Build configuration list for PBXNativeTarget "SelfUp" */;
 			buildPhases = (
 				A6A41302746C605C22E3E7C6 /* Sources */,
+				2C01751698004ED7812A314F /* Resources */,
 			);
 			buildRules = (
 			);
@@ -344,6 +354,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		2C01751698004ED7812A314F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8906686E14EEACA98F2121D4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A408B2907C38B4A4631F0BDC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -385,9 +406,11 @@
 				6C15981B370E4E284BFFB810 /* SavingGoalEditorView.swift in Sources */,
 				53E5A4B9E66EC03E68B4A899 /* SavingGoalFundView.swift in Sources */,
 				F3A1AD30CF5476E5ADD94243 /* SelfUpApp.swift in Sources */,
+				E07A15019CFA2D935A381333 /* SelfUpLogoView.swift in Sources */,
 				D73C72026DAF8B905C0B65CF /* SelfUpShortcuts.swift in Sources */,
 				5145AB550596AB86D9EC2D95 /* SelfUpStyle.swift in Sources */,
 				E063FC8298419FB88F993DD3 /* SettingsView.swift in Sources */,
+				F116EB702946DCC1D9BCB58E /* SplashScreenView.swift in Sources */,
 				9699A36B1A871FF416395A68 /* TaskEditorView.swift in Sources */,
 				143D08B88343308CBD65EDD7 /* TaskItem.swift in Sources */,
 				9B2F95682313752D7CC25110 /* TasksView.swift in Sources */,

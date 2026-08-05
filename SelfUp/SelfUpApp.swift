@@ -24,7 +24,9 @@ struct SelfUpApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(router: router)
+            SplashScreenView {
+                ContentView(router: router)
+            }
         }
         .modelContainer(sharedModelContainer)
     }

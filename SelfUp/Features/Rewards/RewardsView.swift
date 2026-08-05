@@ -33,42 +33,72 @@ struct RewardsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    // Balance Hero Card
-                    VStack(spacing: 8) {
-                        Text("AVAILABLE BALANCE")
-                            .font(.caption)
-                            .bold()
-                            .foregroundStyle(.secondary)
+                    // Balance Vault Hero Card
+                    VStack(spacing: 12) {
+                        HStack {
+                            ZStack {
+                                Circle()
+                                    .fill(SelfUpStyle.goldGradient)
+                                    .frame(width: 44, height: 44)
+                                Image(systemName: "sparkles")
+                                    .foregroundStyle(.white)
+                                    .font(.title3)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("AVAILABLE REWARD VAULT")
+                                    .font(.caption2)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(SelfUpStyle.rewardGold)
+                                    .tracking(1)
+                                Text("\(snapshot.currentXP) XP")
+                                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                                    .foregroundStyle(SelfUpStyle.goldGradient)
+                            }
+                            
+                            Spacer()
+                        }
                         
-                        Text("\(snapshot.currentXP) XP")
-                            .font(.system(size: 40, weight: .black, design: .rounded))
-                            .foregroundStyle(SelfUpStyle.goldGradient)
+                        Divider()
                         
-                        Text("Lifetime Earned: \(snapshot.xp) XP")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack {
+                            Text("Total Earned: \(snapshot.xp) XP")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text("Level \(snapshot.level) Vault")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Capsule().fill(Color.orange.opacity(0.12)))
+                                .foregroundStyle(.orange)
+                        }
                     }
-                    .frame(maxWidth: .infinity)
-                    .premiumCard()
+                    .glowingCard(color: SelfUpStyle.rewardGold, cornerRadius: 20)
                     .padding(.horizontal)
                     
                     // Active Rewards Grid
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 14) {
                         Text("Reward Store")
-                            .font(.headline)
+                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
                             .padding(.horizontal)
                         
                         if activeRewards.isEmpty {
                             VStack(spacing: 12) {
                                 Image(systemName: "gift.fill")
-                                    .font(.system(size: 40))
-                                    .foregroundStyle(.secondary)
-                                Text("No rewards available in the store.")
+                                    .font(.system(size: 44))
+                                    .foregroundStyle(SelfUpStyle.rewardGold.opacity(0.5))
+                                Text("No active rewards in store")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
                             .frame(maxWidth: .infinity, alignment: .center)
                             .padding(.vertical, 40)
+                            .background(RoundedRectangle(cornerRadius: 20).fill(Color(.secondarySystemGroupedBackground)))
+                            .padding(.horizontal)
                         } else {
                             LazyVGrid(columns: columns, spacing: 16) {
                                 ForEach(activeRewards) { reward in
@@ -96,18 +126,28 @@ struct RewardsView: View {
                     
                     // Redeemed Rewards List
                     if !redeemedRewards.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 14) {
                             Text("Redemption History")
-                                .font(.headline)
+                                .font(.system(.title3, design: .rounded))
+                                .fontWeight(.bold)
                                 .padding(.horizontal)
                             
                             VStack(spacing: 0) {
                                 ForEach(redeemedRewards) { reward in
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(reward.title)
+                                    HStack(spacing: 12) {
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.emerald.opacity(0.12))
+                                                .frame(width: 36, height: 36)
+                                            Image(systemName: "checkmark.seal.fill")
+                                                .foregroundStyle(Color.emerald)
                                                 .font(.subheadline)
-                                                .bold()
+                                        }
+                                        
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(reward.title)
+                                                .font(.system(.subheadline, design: .rounded))
+                                                .fontWeight(.bold)
                                                 .strikethrough()
                                                 .foregroundStyle(.secondary)
                                             if let date = reward.redeemedAt {
@@ -118,19 +158,20 @@ struct RewardsView: View {
                                         }
                                         Spacer()
                                         Text("-\(reward.xpCost) XP")
-                                            .font(.subheadline)
-                                            .bold()
-                                            .foregroundStyle(.secondary)
+                                            .font(.system(.subheadline, design: .rounded))
+                                            .fontWeight(.bold)
+                                            .foregroundStyle(.orange)
                                     }
-                                    .padding()
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 12)
+                                    .background(Color(.secondarySystemGroupedBackground))
                                     
                                     if reward != redeemedRewards.last {
                                         Divider()
                                     }
                                 }
                             }
-                            .background(Color(.secondarySystemGroupedBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                             .padding(.horizontal)
                         }
                     }
@@ -151,7 +192,9 @@ struct RewardsView: View {
                     Button {
                         showingEditor = true
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(SelfUpStyle.primaryIndigo)
                     }
                 }
             }
@@ -170,6 +213,7 @@ struct RewardsView: View {
     private func redeem(_ reward: Reward) {
         reward.redeemedAt = Date()
         try? modelContext.save()
+        Haptics.success()
     }
     
     private func delete(_ reward: Reward) {
@@ -191,44 +235,55 @@ struct RewardCard: View {
         VStack(alignment: .leading, spacing: 14) {
             ZStack {
                 Circle()
-                    .fill(canRedeem ? Color.orange.opacity(0.15) : Color.gray.opacity(0.1))
+                    .fill(canRedeem ? Color.orange.opacity(0.15) : Color.primary.opacity(0.06))
                     .frame(width: 44, height: 44)
-                Image(systemName: "gift.fill")
-                    .font(.headline)
-                    .foregroundStyle(canRedeem ? Color.orange : Color.gray)
+                Image(systemName: canRedeem ? "gift.fill" : "lock.fill")
+                    .font(.title3)
+                    .foregroundStyle(canRedeem ? Color.orange : .secondary)
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(reward.title)
-                    .font(.headline)
+                    .font(.system(.headline, design: .rounded))
+                    .fontWeight(.bold)
                     .lineLimit(2)
-                    .frame(height: 48, alignment: .topLeading)
+                    .frame(height: 44, alignment: .topLeading)
                 
                 Text("\(reward.xpCost) XP")
-                    .font(.subheadline)
-                    .bold()
+                    .font(.system(.subheadline, design: .rounded))
+                    .fontWeight(.bold)
                     .foregroundStyle(SelfUpStyle.goldGradient)
             }
             
             Button {
-                withAnimation(.spring()) {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                     onRedeem()
                 }
             } label: {
-                Text("Redeem")
+                Text(canRedeem ? "Redeem" : "Locked")
                     .font(.caption)
-                    .bold()
+                    .fontWeight(.bold)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(canRedeem ? Color.orange : Color.gray.opacity(0.4))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(canRedeem ? SelfUpStyle.goldGradient : LinearGradient(colors: [.gray.opacity(0.4), .gray.opacity(0.4)], startPoint: .leading, endPoint: .trailing))
+                    )
             }
+            .pressableScale(scale: 0.92)
             .disabled(!canRedeem)
         }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: Color(white: 0, opacity: 0.03), radius: 6, x: 0, y: 3)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color(.secondarySystemGroupedBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 3)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(canRedeem ? Color.orange.opacity(0.3) : Color.primary.opacity(0.06), lineWidth: 1)
+        )
     }
 }
+

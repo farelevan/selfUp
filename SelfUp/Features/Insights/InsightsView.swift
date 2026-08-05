@@ -40,7 +40,8 @@ struct InsightsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: 20) {
+                    // Range Picker
                     Picker("Range", selection: $selectedRange) {
                         Text("7 Days").tag(7)
                         Text("30 Days").tag(30)
@@ -48,16 +49,30 @@ struct InsightsView: View {
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
                     
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Life Score History")
-                            .font(.headline)
+                    // Life Score History Card
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Life Score Analytics")
+                                    .font(.system(.title3, design: .rounded))
+                                    .fontWeight(.bold)
+                                Text("Last \(selectedRange) days progress trajectory")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chart.xyaxis.line")
+                                .font(.title3)
+                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                        }
                         
                         Chart(lifeScoreHistory) { day in
                             LineMark(
                                 x: .value("Date", day.date, unit: .day),
                                 y: .value("Life Score", day.score)
                             )
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            .lineStyle(StrokeStyle(lineWidth: 3))
                             .interpolationMethod(.catmullRom)
                             
                             AreaMark(
@@ -67,67 +82,109 @@ struct InsightsView: View {
                             .interpolationMethod(.catmullRom)
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [.blue.opacity(0.15), .blue.opacity(0.0)],
+                                    colors: [SelfUpStyle.primaryIndigo.opacity(0.25), SelfUpStyle.primaryIndigo.opacity(0.0)],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
                             )
                         }
-                        .frame(height: 150)
+                        .frame(height: 160)
                         .chartYScale(domain: 0...100)
                     }
-                    .premiumCard()
+                    .glowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 20)
                     .padding(.horizontal)
                     
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Habit Consistency")
-                            .font(.headline)
+                    // Habit Consistency Card
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            Text("Habit Consistency")
+                                .font(.system(.title3, design: .rounded))
+                                .fontWeight(.bold)
+                            Spacer()
+                            Image(systemName: "flame.fill")
+                                .foregroundStyle(.orange)
+                        }
                         
                         if activeHabits.isEmpty {
-                            Text("No habits tracked yet.")
+                            Text("No active habits tracked yet.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         } else {
-                            ForEach(activeHabits) { habit in
-                                HStack {
-                                    Image(systemName: habit.symbol)
-                                        .foregroundStyle(.blue)
-                                    Text(habit.title)
-                                    Spacer()
-                                    Text("Streak: \(ProgressService.streak(completionDates: habit.completions.map { $0.date }, through: Date())) days")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                            VStack(spacing: 12) {
+                                ForEach(activeHabits) { habit in
+                                    let streak = ProgressService.streak(completionDates: habit.completions.map { $0.date }, through: Date())
+                                    HStack(spacing: 12) {
+                                        ZStack {
+                                            Circle()
+                                                .fill(SelfUpStyle.primaryIndigo.opacity(0.12))
+                                                .frame(width: 36, height: 36)
+                                            Image(systemName: habit.symbol)
+                                                .font(.subheadline)
+                                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                        }
+                                        
+                                        Text(habit.title)
+                                            .font(.system(.subheadline, design: .rounded))
+                                            .fontWeight(.bold)
+                                        
+                                        Spacer()
+                                        
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "flame.fill")
+                                                .font(.caption2)
+                                                .foregroundStyle(.orange)
+                                            Text("\(streak)d streak")
+                                                .font(.caption)
+                                                .fontWeight(.bold)
+                                        }
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(Capsule().fill(Color.orange.opacity(0.12)))
+                                        .foregroundStyle(.orange)
+                                    }
                                 }
-                                .font(.subheadline)
                             }
                         }
                     }
-                    .premiumCard()
+                    .premiumCard(cornerRadius: 20)
                     .padding(.horizontal)
                     
-                    VStack(alignment: .leading, spacing: 10) {
+                    // Task Completion Metrics
+                    VStack(alignment: .leading, spacing: 14) {
                         Text("Task Completion Metrics")
-                            .font(.headline)
+                            .font(.system(.title3, design: .rounded))
+                            .fontWeight(.bold)
                         
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Completed: \(completedTasksCount)")
-                                Text("Pending: \(pendingTasksCount)")
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack(spacing: 6) {
+                                    Circle().fill(Color.emerald).frame(width: 8, height: 8)
+                                    Text("Completed: \(completedTasksCount)")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                }
+                                HStack(spacing: 6) {
+                                    Circle().fill(Color.orange).frame(width: 8, height: 8)
+                                    Text("Pending: \(pendingTasksCount)")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                }
                             }
+                            
                             Spacer()
-                            VStack(alignment: .trailing) {
+                            
+                            VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(taskCompletionRate, format: .number.precision(.fractionLength(0...1)))%")
-                                    .font(.title)
-                                    .bold()
-                                    .foregroundStyle(.green)
+                                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color.emerald)
                                 Text("Completion Rate")
-                                    .font(.caption)
+                                    .font(.caption2)
+                                    .fontWeight(.bold)
                                     .foregroundStyle(.secondary)
                             }
                         }
-                        .font(.subheadline)
                     }
-                    .premiumCard()
+                    .premiumCard(cornerRadius: 20)
                     .padding(.horizontal)
                     
                     if !transactions.isEmpty {
@@ -153,4 +210,5 @@ struct InsightsView: View {
             }
         }
     }
+
 }
