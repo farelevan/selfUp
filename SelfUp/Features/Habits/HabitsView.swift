@@ -203,11 +203,14 @@ struct HabitCard: View {
                 } label: {
                     ZStack {
                         Circle()
-                            .fill(isCompletedToday ? Color.emerald : Color.primary.opacity(0.06))
-                            .frame(width: 32, height: 32)
-                        Image(systemName: isCompletedToday ? "checkmark" : "plus")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(isCompletedToday ? .white : .secondary)
+                            .fill(isCompletedToday ? SelfUpStyle.cyberLime : Color.primary.opacity(0.06))
+                            .frame(width: 34, height: 34)
+                        Circle()
+                            .stroke(isCompletedToday ? Color.clear : Color.primary.opacity(0.12), lineWidth: 1.5)
+                            .frame(width: 34, height: 34)
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 13, weight: .black))
+                            .foregroundStyle(isCompletedToday ? .white : Color.primary.opacity(0.35))
                     }
                 }
                 .pressableScale(scale: 0.88)

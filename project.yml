@@ -8,6 +8,8 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: SelfUp
+    dependencies:
+      - target: SelfUpWidgets
     settings:
       base:
         INFOPLIST_FILE: SelfUp/Info.plist
@@ -16,13 +18,27 @@ targets:
         DEVELOPMENT_TEAM: ""
       configs:
         debug:
-          CODE_SIGNING_REQUIRED: NO
-          CODE_SIGNING_ALLOWED: NO
-          CODE_SIGN_IDENTITY: ""
+          CODE_SIGN_STYLE: Automatic
         release:
-          CODE_SIGNING_REQUIRED: NO
-          CODE_SIGNING_ALLOWED: NO
-          CODE_SIGN_IDENTITY: ""
+          CODE_SIGN_STYLE: Automatic
+  SelfUpWidgets:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: SelfUpWidgets
+      - path: SelfUp/Features/Shared/SelfUpStyle.swift
+      - path: SelfUp/Services/WidgetDataStore.swift
+    settings:
+      base:
+        INFOPLIST_FILE: SelfUpWidgets/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.farelevan.selfup.SelfUp.SelfUpWidgets
+        DEVELOPMENT_TEAM: ""
+      configs:
+        debug:
+          CODE_SIGN_STYLE: Automatic
+        release:
+          CODE_SIGN_STYLE: Automatic
   SelfUpTests:
     type: bundle.unit-test
     platform: iOS
@@ -34,10 +50,7 @@ targets:
     settings:
       configs:
         debug:
-          CODE_SIGNING_REQUIRED: NO
-          CODE_SIGNING_ALLOWED: NO
-          CODE_SIGN_IDENTITY: ""
+          CODE_SIGN_STYLE: Automatic
         release:
-          CODE_SIGNING_REQUIRED: NO
-          CODE_SIGNING_ALLOWED: NO
-          CODE_SIGN_IDENTITY: ""
+          CODE_SIGN_STYLE: Automatic
+
