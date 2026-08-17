@@ -25,7 +25,7 @@ struct TrackingService {
         if task.completedAt != nil {
             return false
         } else {
-            task.completedAt = date
+            task.move(to: .completed, on: date)
             return true
         }
     }

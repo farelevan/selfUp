@@ -20,32 +20,28 @@ struct SelfUpLogoView: View {
                 
                 HStack(spacing: 0) {
                     Text("Self")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .font(.system(size: 22, weight: .semibold, design: .default))
                         .foregroundStyle(.primary)
                     Text("Up")
-                        .font(.system(size: 22, weight: .black, design: .rounded))
-                        .foregroundStyle(SelfUpStyle.heroGradient)
+                        .font(.system(size: 22, weight: .semibold, design: .default))
+                        .foregroundStyle(SelfUpStyle.primaryIndigo)
                 }
             }
             
         case .splashHero:
             VStack(spacing: 16) {
                 LogoEmblem(size: 84)
-                    .shadow(color: SelfUpStyle.primaryIndigo.opacity(0.4), radius: 20, x: 0, y: 10)
+                    .shadow(color: Color.black.opacity(0.12), radius: 12, x: 0, y: 6)
                 
                 HStack(spacing: 0) {
                     Text("Self")
-                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                        .font(.system(size: 42, weight: .semibold, design: .default))
                         .foregroundStyle(.primary)
                     Text("Up")
-                        .font(.system(size: 42, weight: .black, design: .rounded))
-                        .foregroundStyle(SelfUpStyle.heroGradient)
+                        .font(.system(size: 42, weight: .semibold, design: .default))
+                        .foregroundStyle(SelfUpStyle.primaryIndigo)
                 }
                 
-                Text("ELEVATE YOUR DAILY LIFE")
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .tracking(3)
             }
         }
     }
@@ -61,11 +57,11 @@ struct LogoEmblem: View {
             RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
                 .fill(SelfUpStyle.heroGradient)
                 .frame(width: size, height: size)
-                .shadow(color: SelfUpStyle.primaryIndigo.opacity(0.3), radius: size * 0.2, x: 0, y: size * 0.1)
+                .shadow(color: Color.black.opacity(0.12), radius: size * 0.12, x: 0, y: size * 0.06)
             
             // Ascending Growth Arrow Chevron + Pulse Ring
             ZStack {
-                // Outer Glow Loop
+                // Subtle structure ring
                 Circle()
                     .stroke(
                         LinearGradient(
@@ -102,7 +98,7 @@ struct LogoEmblem: View {
                 }
                 .fill(
                     LinearGradient(
-                        colors: [.white, Color(red: 1.0, green: 0.85, blue: 0.4)],
+                        colors: [.white, .white.opacity(0.82)],
                         startPoint: .top,
                         endPoint: .bottom
                     )

@@ -52,7 +52,7 @@ struct RewardsView: View {
                                     .foregroundStyle(SelfUpStyle.rewardGold)
                                     .tracking(1)
                                 Text("\(snapshot.currentXP) XP")
-                                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                                    .font(.system(size: 36, weight: .bold, design: .default))
                                     .foregroundStyle(SelfUpStyle.goldGradient)
                             }
                             
@@ -76,13 +76,13 @@ struct RewardsView: View {
                                 .foregroundStyle(.orange)
                         }
                     }
-                    .glowingCard(color: SelfUpStyle.rewardGold, cornerRadius: 20)
+                    .premiumCard(cornerRadius: 16)
                     .padding(.horizontal)
                     
                     // Active Rewards Grid
                     VStack(alignment: .leading, spacing: 14) {
                         Text("Reward Store")
-                            .font(.system(.title3, design: .rounded))
+                            .font(.system(.title3, design: .default))
                             .fontWeight(.bold)
                             .padding(.horizontal)
                         
@@ -128,7 +128,7 @@ struct RewardsView: View {
                     if !redeemedRewards.isEmpty {
                         VStack(alignment: .leading, spacing: 14) {
                             Text("Redemption History")
-                                .font(.system(.title3, design: .rounded))
+                                .font(.system(.title3, design: .default))
                                 .fontWeight(.bold)
                                 .padding(.horizontal)
                             
@@ -146,7 +146,7 @@ struct RewardsView: View {
                                         
                                         VStack(alignment: .leading, spacing: 2) {
                                             Text(reward.title)
-                                                .font(.system(.subheadline, design: .rounded))
+                                                .font(.system(.subheadline, design: .default))
                                                 .fontWeight(.bold)
                                                 .strikethrough()
                                                 .foregroundStyle(.secondary)
@@ -158,7 +158,7 @@ struct RewardsView: View {
                                         }
                                         Spacer()
                                         Text("-\(reward.xpCost) XP")
-                                            .font(.system(.subheadline, design: .rounded))
+                                            .font(.system(.subheadline, design: .default))
                                             .fontWeight(.bold)
                                             .foregroundStyle(.orange)
                                     }
@@ -244,13 +244,13 @@ struct RewardCard: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(reward.title)
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
                     .lineLimit(2)
                     .frame(height: 44, alignment: .topLeading)
                 
                 Text("\(reward.xpCost) XP")
-                    .font(.system(.subheadline, design: .rounded))
+                    .font(.system(.subheadline, design: .default))
                     .fontWeight(.bold)
                     .foregroundStyle(SelfUpStyle.goldGradient)
             }

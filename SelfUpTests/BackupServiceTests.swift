@@ -41,4 +41,24 @@ final class BackupServiceTests: XCTestCase {
         let data = try JSONSerialization.data(withJSONObject: invalidPayload)
         XCTAssertThrowsError(try BackupService.validateImport(data))
     }
+
+    func testLegacyTaskBackupWithoutWorkflowFieldsStillDecodes() throws {
+        let payload: [String: Any] = [
+            "habits": [],
+            "transactions": [],
+            "tasks": [[
+                "id": UUID().uuidString,
+                "title": "Legacy task",
+                "priority": "medium",
+                "xpReward": 10
+            ]]
+        ]
+
+        let data = try JSONSerialization.data(withJSONObject: payload)
+        let decoded = try BackupService.validateImport(data)
+
+        XCTAssertEqual(decoded.tasks.first?.title, "Legacy task")
+        XCTAssertNil(decoded.tasks.first?.period)
+        XCTAssertNil(decoded.tasks.first?.workflowStatus)
+    }
 }

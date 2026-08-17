@@ -67,7 +67,7 @@ struct DailyActivityCarouselView: View {
                                 Image(systemName: page.symbol)
                                     .font(.system(size: 11, weight: .bold))
                                 Text(page.shortTitle)
-                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .font(.system(size: 12, weight: .bold, design: .default))
                             }
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
@@ -162,7 +162,7 @@ struct DailyActivityCarouselView: View {
                     Image(systemName: "hand.draw.fill")
                         .font(.caption2)
                     Text("Swipe left/right or up/down inside box")
-                        .font(.system(size: 10, weight: .medium, design: .rounded))
+                        .font(.system(size: 10, weight: .medium, design: .default))
                 }
                 .foregroundStyle(.tertiary)
                 
@@ -177,7 +177,7 @@ struct DailyActivityCarouselView: View {
                 }
             }
         }
-        .cyberGlowingCard(color: currentPage.accentColor, cornerRadius: 24)
+        .premiumCard(cornerRadius: 16)
         .padding(.horizontal)
     }
     
@@ -245,7 +245,7 @@ struct DailyActivityCarouselView: View {
                                 .frame(width: 4, height: 22)
                             
                             Text(task.title)
-                                .font(.system(.subheadline, design: .rounded))
+                                .font(.system(.subheadline, design: .default))
                                 .fontWeight(.bold)
                                 .lineLimit(1)
                             
@@ -285,7 +285,7 @@ struct DailyActivityCarouselView: View {
                         .foregroundStyle(.secondary)
                 }
                 Text("\(currencySymbol) \(moneySummary.income, format: .number)")
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
                     .foregroundStyle(SelfUpStyle.cyberLime)
             }
@@ -303,7 +303,7 @@ struct DailyActivityCarouselView: View {
                         .foregroundStyle(.secondary)
                 }
                 Text("\(currencySymbol) \(moneySummary.expenses, format: .number)")
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
                     .foregroundStyle(SelfUpStyle.hyperMagenta)
             }

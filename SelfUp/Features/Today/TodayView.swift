@@ -18,7 +18,7 @@ struct TodayView: View {
     @State private var showingSettings = false
     @State private var animateScore = false
     
-    private var activeHabits: [Habit] { habits.filter { !$0.isArchived } }
+    private var activeHabits: [Habit] { habits.filter { !$0.isArchived && $0.isScheduled(on: Date()) } }
     
     private var completedHabitsCount: Int {
         activeHabits.filter { ProgressService.isCompleted($0, on: Date()) }.count
@@ -100,7 +100,7 @@ struct TodayView: View {
                             
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("LEVEL \(snapshot.level)")
-                                    .font(.system(.headline, design: .rounded))
+                                    .font(.system(.headline, design: .default))
                                     .fontWeight(.bold)
                                 Text("\(snapshot.xp) XP Total")
                                     .font(.caption)
@@ -114,7 +114,7 @@ struct TodayView: View {
                                     .font(.caption2)
                                     .foregroundStyle(SelfUpStyle.cyberLime)
                                 Text("\(100 - (snapshot.xp % 100)) XP NEXT LEVEL")
-                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                                    .font(.system(size: 10, weight: .bold, design: .default))
                             }
                             .padding(.horizontal, 10)
                             .padding(.vertical, 5)
@@ -131,16 +131,15 @@ struct TodayView: View {
                                 Capsule()
                                     .fill(SelfUpStyle.progressGradient)
                                     .frame(width: max(14, geo.size.width * CGFloat(snapshot.xpProgress)), height: 12)
-                                    .shadow(color: SelfUpStyle.cyberLime.opacity(0.4), radius: 6, x: 0, y: 2)
                                     .animation(.spring(response: 0.8, dampingFraction: 0.7), value: snapshot.xpProgress)
                             }
                         }
                         .frame(height: 12)
                     }
-                    .cyberGlowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 24)
+                    .premiumCard(cornerRadius: 16)
                     .padding(.horizontal)
                     
-                    // Life Vibe Score Bento Gauge
+                    // Life Score Bento Gauge
                     HStack(alignment: .center, spacing: 20) {
                         // Life Score Circular Gauge
                         VStack(spacing: 6) {
@@ -157,14 +156,13 @@ struct TodayView: View {
                                     )
                                     .rotationEffect(.degrees(-90))
                                     .frame(width: 104, height: 104)
-                                    .shadow(color: SelfUpStyle.cyberLime.opacity(0.4), radius: 10, x: 0, y: 4)
                                     .animation(.spring(response: 1.2, dampingFraction: 0.8), value: animateScore)
                                 
                                 VStack(spacing: 0) {
                                     Text("\(snapshot.lifeScore)")
-                                        .font(.system(size: 32, weight: .black, design: .rounded))
-                                    Text("VIBE")
-                                        .font(.system(size: 10, weight: .black))
+                                        .font(.system(size: 32, weight: .bold, design: .default))
+                                    Text("SCORE")
+                                        .font(.system(size: 10, weight: .bold))
                                         .foregroundStyle(SelfUpStyle.cyberLime)
                                         .tracking(1.5)
                                 }
@@ -185,7 +183,7 @@ struct TodayView: View {
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                     Text("\(completedHabitsCount) of \(activeHabits.count)")
-                                        .font(.system(.subheadline, design: .rounded))
+                                        .font(.system(.subheadline, design: .default))
                                         .fontWeight(.bold)
                                 }
                             }
@@ -202,7 +200,7 @@ struct TodayView: View {
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                     Text("\(openTasksToday.count) Pending")
-                                        .font(.system(.subheadline, design: .rounded))
+                                        .font(.system(.subheadline, design: .default))
                                         .fontWeight(.bold)
                                 }
                             }
@@ -219,7 +217,7 @@ struct TodayView: View {
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                     Text("\(moneySummaryToday.net >= 0 ? "+" : "")\(currencySymbol) \(moneySummaryToday.net, format: .number)")
-                                        .font(.system(.subheadline, design: .rounded))
+                                        .font(.system(.subheadline, design: .default))
                                         .fontWeight(.bold)
                                         .foregroundStyle(moneySummaryToday.net >= 0 ? SelfUpStyle.cyberLime : SelfUpStyle.hyperMagenta)
                                 }
@@ -228,7 +226,7 @@ struct TodayView: View {
                         
                         Spacer()
                     }
-                    .bentoCard(cornerRadius: 24)
+                    .bentoCard(cornerRadius: 16)
                     .padding(.horizontal)
                     .onAppear {
                         animateScore = true
@@ -246,10 +244,10 @@ struct TodayView: View {
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("7-Day Vibe Trend")
-                                    .font(.system(.headline, design: .rounded))
+                                Text("7-Day Progress")
+                                    .font(.system(.headline, design: .default))
                                     .fontWeight(.bold)
-                                Text("Consistency trajectory")
+                                Text("Your consistency over time")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -283,7 +281,7 @@ struct TodayView: View {
                         .frame(height: 135)
                         .chartYScale(domain: 0...100)
                     }
-                    .cyberGlowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 24)
+                    .premiumCard(cornerRadius: 16)
                     .padding(.horizontal)
                 }
                 .padding(.vertical)
@@ -301,6 +299,7 @@ struct HabitQuickCell: View {
     let habit: Habit
     @Environment(\.modelContext) private var modelContext
     private let trackingService = TrackingService()
+    @State private var celebrationToken = 0
     
     private var isCompletedToday: Bool {
         ProgressService.isCompleted(habit, on: Date())
@@ -321,8 +320,9 @@ struct HabitQuickCell: View {
     var body: some View {
         Button {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                _ = try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)
-                if !isCompletedToday {
+                let didComplete = (try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)) == true
+                if didComplete {
+                    celebrationToken += 1
                     Haptics.success()
                 } else {
                     Haptics.light()
@@ -351,6 +351,11 @@ struct HabitQuickCell: View {
             )
         }
         .pressableScale(scale: 0.94)
+        .overlay {
+            if celebrationToken > 0 {
+                CompletionMotionView(color: tintColor, compact: true)
+                    .id(celebrationToken)
+            }
+        }
     }
 }
-

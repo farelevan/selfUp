@@ -9,6 +9,9 @@ struct HabitBackup: Codable {
     let isArchived: Bool
     let createdAt: Date
     let completions: [Date]
+    let scheduledWeekdays: Int?
+    let reminderHour: Int?
+    let reminderMinute: Int?
 }
 
 struct TransactionBackup: Codable {
@@ -27,6 +30,12 @@ struct TaskBackup: Codable {
     let priority: String
     let completedAt: Date?
     let xpReward: Int
+    let period: String?
+    let workflowStatus: String?
+    let startedAt: Date?
+    let recurrence: String?
+    let reminderHour: Int?
+    let reminderMinute: Int?
 }
 
 struct BackupPayload: Codable {

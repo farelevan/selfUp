@@ -17,12 +17,13 @@ struct HabitsView: View {
     ]
     
     private var completedTodayCount: Int {
-        activeHabits.filter { ProgressService.isCompleted($0, on: Date()) }.count
+        activeHabits.filter { $0.isScheduled(on: Date()) && ProgressService.isCompleted($0, on: Date()) }.count
     }
     
     private var completionRate: Double {
-        guard !activeHabits.isEmpty else { return 0 }
-        return Double(completedTodayCount) / Double(activeHabits.count)
+        let scheduled = activeHabits.filter { $0.isScheduled(on: Date()) }
+        guard !scheduled.isEmpty else { return 0 }
+        return Double(completedTodayCount) / Double(scheduled.count)
     }
     
     var body: some View {
@@ -46,7 +47,7 @@ struct HabitsView: View {
                                         .foregroundStyle(SelfUpStyle.primaryIndigo)
                                         .tracking(1.2)
                                     Text("\(completedTodayCount) of \(activeHabits.count) Done")
-                                        .font(.system(.title3, design: .rounded))
+                                        .font(.system(.title3, design: .default))
                                         .fontWeight(.bold)
                                 }
                                 
@@ -62,11 +63,11 @@ struct HabitsView: View {
                                         .rotationEffect(.degrees(-90))
                                         .frame(width: 52, height: 52)
                                     Text("\(Int(completionRate * 100))%")
-                                        .font(.system(size: 11, weight: .black, design: .rounded))
+                                        .font(.system(size: 11, weight: .bold, design: .default))
                                         .foregroundStyle(SelfUpStyle.cyberLime)
                                 }
                             }
-                            .bentoCard(cornerRadius: 24)
+                            .bentoCard(cornerRadius: 16)
                             .padding(.horizontal)
                             
                             // Habit Cards Grid
@@ -147,6 +148,7 @@ struct HabitCard: View {
     let habit: Habit
     let trackingService: TrackingService
     @Environment(\.modelContext) private var modelContext
+    @State private var celebrationToken = 0
     
     private var isCompletedToday: Bool {
         ProgressService.isCompleted(habit, on: Date())
@@ -193,8 +195,9 @@ struct HabitCard: View {
                 
                 Button {
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
-                        _ = try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)
-                        if !isCompletedToday {
+                        let didComplete = (try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)) == true
+                        if didComplete {
+                            celebrationToken += 1
                             Haptics.success()
                         } else {
                             Haptics.light()
@@ -209,8 +212,12 @@ struct HabitCard: View {
                             .stroke(isCompletedToday ? Color.clear : Color.primary.opacity(0.12), lineWidth: 1.5)
                             .frame(width: 34, height: 34)
                         Image(systemName: "checkmark")
-                            .font(.system(size: 13, weight: .black))
+                            .font(.system(size: 13, weight: .bold))
                             .foregroundStyle(isCompletedToday ? .white : Color.primary.opacity(0.35))
+                        if celebrationToken > 0 {
+                            CompletionMotionView(color: tintColor, compact: true)
+                                .id(celebrationToken)
+                        }
                     }
                 }
                 .pressableScale(scale: 0.88)
@@ -219,7 +226,7 @@ struct HabitCard: View {
             // Text Details
             VStack(alignment: .leading, spacing: 4) {
                 Text(habit.title)
-                    .font(.system(.headline, design: .rounded))
+                    .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
                     .lineLimit(1)
                 
@@ -269,4 +276,3 @@ struct HabitCard: View {
         )
     }
 }
-

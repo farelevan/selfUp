@@ -36,6 +36,38 @@ struct InsightsView: View {
         }
         return list
     }
+
+    private var weeklyScores: (current: Int, previous: Int) {
+        let calendar = Calendar.current
+        func average(daysAgo range: Range<Int>) -> Int {
+            let values = range.compactMap { offset -> Int? in
+                guard let date = calendar.date(byAdding: .day, value: -offset, to: Date()) else { return nil }
+                return ProgressService.lifeScore(habits: habits, tasks: tasks, transactions: transactions, on: date)
+            }
+            return values.isEmpty ? 0 : values.reduce(0, +) / values.count
+        }
+        return (average(daysAgo: 0..<7), average(daysAgo: 7..<14))
+    }
+
+    private var weeklyRecommendations: [String] {
+        let calendar = Calendar.current
+        let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        let missedHabit = activeHabits.min { lhs, rhs in
+            lhs.completions.filter { $0.date >= sevenDaysAgo }.count < rhs.completions.filter { $0.date >= sevenDaysAgo }.count
+        }
+        let overdue = tasks.filter { $0.completedAt == nil && ($0.dueDate ?? .distantFuture) < Date() }.count
+        let expenses = transactions.filter { $0.type == .expense && $0.date >= sevenDaysAgo }
+        var items: [String] = []
+        if let missedHabit, missedHabit.completions.filter({ $0.date >= sevenDaysAgo }).count < 4 {
+            items.append("Make ‘\(missedHabit.title)’ easier or move it to your best time of day.")
+        }
+        if overdue > 0 { items.append("Reschedule or finish your \(overdue) overdue task\(overdue == 1 ? "" : "s").") }
+        if let topCategory = Dictionary(grouping: expenses, by: \.category).max(by: { $0.value.count < $1.value.count })?.key {
+            items.append("Review \(topCategory)—it was your most frequent spending category this week.")
+        }
+        if items.isEmpty { items.append("Keep your rhythm: choose one meaningful habit and one priority task each morning.") }
+        return Array(items.prefix(3))
+    }
     
     var body: some View {
         NavigationStack {
@@ -48,13 +80,48 @@ struct InsightsView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
+
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Weekly Review")
+                                    .font(.title3.bold())
+                                Text("Your last 7 days, turned into next actions")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            VStack(alignment: .trailing) {
+                                Text("\(weeklyScores.current)")
+                                    .font(.title.bold())
+                                    .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                Text(weeklyScores.current >= weeklyScores.previous ? "↑ from last week" : "↓ from last week")
+                                    .font(.caption2.bold())
+                                    .foregroundStyle(weeklyScores.current >= weeklyScores.previous ? Color.emerald : Color.orange)
+                            }
+                        }
+                        Divider()
+                        ForEach(Array(weeklyRecommendations.enumerated()), id: \.offset) { index, recommendation in
+                            HStack(alignment: .top, spacing: 10) {
+                                Text("\(index + 1)")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.white)
+                                    .frame(width: 22, height: 22)
+                                    .background(Circle().fill(SelfUpStyle.primaryIndigo))
+                                Text(recommendation)
+                                    .font(.subheadline)
+                            }
+                        }
+                    }
+                    .premiumCard(cornerRadius: 18)
+                    .padding(.horizontal)
                     
                     // Life Score History Card
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Life Score Analytics")
-                                    .font(.system(.title3, design: .rounded))
+                                    .font(.system(.title3, design: .default))
                                     .fontWeight(.bold)
                                 Text("Last \(selectedRange) days progress trajectory")
                                     .font(.caption)
@@ -91,14 +158,14 @@ struct InsightsView: View {
                         .frame(height: 160)
                         .chartYScale(domain: 0...100)
                     }
-                    .glowingCard(color: SelfUpStyle.primaryIndigo, cornerRadius: 20)
+                    .premiumCard(cornerRadius: 16)
                     .padding(.horizontal)
                     
                     // Habit Consistency Card
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             Text("Habit Consistency")
-                                .font(.system(.title3, design: .rounded))
+                                .font(.system(.title3, design: .default))
                                 .fontWeight(.bold)
                             Spacer()
                             Image(systemName: "flame.fill")
@@ -124,7 +191,7 @@ struct InsightsView: View {
                                         }
                                         
                                         Text(habit.title)
-                                            .font(.system(.subheadline, design: .rounded))
+                                            .font(.system(.subheadline, design: .default))
                                             .fontWeight(.bold)
                                         
                                         Spacer()
@@ -152,7 +219,7 @@ struct InsightsView: View {
                     // Task Completion Metrics
                     VStack(alignment: .leading, spacing: 14) {
                         Text("Task Completion Metrics")
-                            .font(.system(.title3, design: .rounded))
+                            .font(.system(.title3, design: .default))
                             .fontWeight(.bold)
                         
                         HStack(spacing: 16) {
@@ -175,7 +242,7 @@ struct InsightsView: View {
                             
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(taskCompletionRate, format: .number.precision(.fractionLength(0...1)))%")
-                                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                                    .font(.system(size: 30, weight: .bold, design: .default))
                                     .foregroundStyle(Color.emerald)
                                 Text("Completion Rate")
                                     .font(.caption2)

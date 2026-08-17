@@ -48,7 +48,7 @@ struct MoneyView: View {
                                     .tracking(1)
                                 
                                 Text("\(currencySymbol) \(summary.net, format: .number.precision(.fractionLength(0...2)))")
-                                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                                    .font(.system(size: 34, weight: .bold, design: .default))
                                     .foregroundStyle(summary.net >= 0 ? Color.emerald : Color.coral)
                             }
                             Spacer()
@@ -75,7 +75,7 @@ struct MoneyView: View {
                                         .foregroundStyle(.secondary)
                                 }
                                 Text("\(currencySymbol) \(summary.income, format: .number)")
-                                    .font(.system(.headline, design: .rounded))
+                                    .font(.system(.headline, design: .default))
                                     .fontWeight(.bold)
                                     .foregroundStyle(Color.emerald)
                             }
@@ -93,7 +93,7 @@ struct MoneyView: View {
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                                 Text("\(currencySymbol) \(summary.expenses, format: .number)")
-                                    .font(.system(.headline, design: .rounded))
+                                    .font(.system(.headline, design: .default))
                                     .fontWeight(.bold)
                                     .foregroundStyle(Color.coral)
                             }
@@ -130,7 +130,7 @@ struct MoneyView: View {
                             .frame(height: 8)
                         }
                     }
-                    .glowingCard(color: summary.net >= 0 ? Color.emerald : Color.coral, cornerRadius: 20)
+                    .premiumCard(cornerRadius: 16)
                     .padding(.horizontal)
                     
                     // Donut Chart & Category breakdown
@@ -143,7 +143,7 @@ struct MoneyView: View {
                     VStack(alignment: .leading, spacing: 14) {
                         HStack {
                             Text("Saving Goals")
-                                .font(.system(.title3, design: .rounded))
+                                .font(.system(.title3, design: .default))
                                 .fontWeight(.bold)
                             Spacer()
                             Button {
@@ -190,7 +190,7 @@ struct MoneyView: View {
                                         HStack {
                                             VStack(alignment: .leading, spacing: 2) {
                                                 Text(goal.title)
-                                                    .font(.system(.headline, design: .rounded))
+                                                    .font(.system(.headline, design: .default))
                                                     .fontWeight(.bold)
                                                 Text("\(currencySymbol) \(goal.currentAmount, format: .number) of \(currencySymbol) \(goal.targetAmount, format: .number)")
                                                     .font(.caption)
@@ -198,7 +198,7 @@ struct MoneyView: View {
                                             }
                                             Spacer()
                                             Text("\(progress * 100, format: .number.precision(.fractionLength(0)))%")
-                                                .font(.system(.callout, design: .rounded))
+                                                .font(.system(.callout, design: .default))
                                                 .fontWeight(.bold)
                                                 .foregroundStyle(SelfUpStyle.primaryIndigo)
                                         }
@@ -267,7 +267,7 @@ struct MoneyView: View {
                     // Recent Transactions List
                     VStack(alignment: .leading, spacing: 14) {
                         Text("This Month's Transactions")
-                            .font(.system(.title3, design: .rounded))
+                            .font(.system(.title3, design: .default))
                             .fontWeight(.bold)
                             .padding(.horizontal)
                         
@@ -387,7 +387,7 @@ struct TransactionRow: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(transaction.category)
-                    .font(.system(.subheadline, design: .rounded))
+                    .font(.system(.subheadline, design: .default))
                     .fontWeight(.bold)
                 if !transaction.note.isEmpty {
                     Text(transaction.note)
@@ -401,7 +401,7 @@ struct TransactionRow: View {
             
             VStack(alignment: .trailing, spacing: 2) {
                 Text("\(isIncome ? "+" : "-")\(currencySymbol) \(transaction.amount, format: .number.precision(.fractionLength(0...2)))")
-                    .font(.system(.subheadline, design: .rounded))
+                    .font(.system(.subheadline, design: .default))
                     .fontWeight(.bold)
                     .foregroundStyle(isIncome ? Color.emerald : .primary)
                 Text(transaction.date, style: .date)

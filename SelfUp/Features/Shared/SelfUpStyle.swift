@@ -45,7 +45,9 @@ struct PressableScaleStyle: ButtonStyle {
     }
 }
 
-// MARK: - Card Modifiers
+// MARK: - Surface System
+// A restrained surface treatment keeps information hierarchy clear without
+// relying on decorative glow, gradients, or saturated borders.
 struct PremiumCardModifier: ViewModifier {
     var cornerRadius: CGFloat
     
@@ -55,11 +57,11 @@ struct PremiumCardModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(Color(.secondarySystemGroupedBackground))
-                    .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
+                    .shadow(color: Color.black.opacity(0.035), radius: 8, x: 0, y: 2)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.primary.opacity(0.06), lineWidth: 1)
+                    .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
             )
     }
 }
@@ -72,19 +74,12 @@ struct GlassCardModifier: ViewModifier {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(.ultraThinMaterial)
-                    .shadow(color: Color.black.opacity(0.06), radius: 12, x: 0, y: 6)
+                    .fill(Color(.secondarySystemGroupedBackground))
+                    .shadow(color: Color.black.opacity(0.035), radius: 8, x: 0, y: 2)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(
-                        LinearGradient(
-                            colors: [.white.opacity(0.3), .white.opacity(0.05)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                    .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
             )
     }
 }
@@ -99,16 +94,16 @@ struct GlowingCardModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(Color(.secondarySystemGroupedBackground))
-                    .shadow(color: glowColor.opacity(0.2), radius: 14, x: 0, y: 6)
+                    .shadow(color: Color.black.opacity(0.035), radius: 8, x: 0, y: 2)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(glowColor.opacity(0.3), lineWidth: 1.5)
+                    .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
             )
     }
 }
 
-// MARK: - Gen Z Bento & Cyber Card Modifiers
+// Legacy modifier names are retained so feature views can migrate gradually.
 struct BentoCardModifier: ViewModifier {
     var cornerRadius: CGFloat
     
@@ -118,18 +113,11 @@ struct BentoCardModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(Color(.secondarySystemGroupedBackground))
-                    .shadow(color: Color.black.opacity(0.06), radius: 14, x: 0, y: 6)
+                    .shadow(color: Color.black.opacity(0.035), radius: 8, x: 0, y: 2)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [Color.primary.opacity(0.12), Color.primary.opacity(0.03)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1.5
-                    )
+                    .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
             )
     }
 }
@@ -144,18 +132,11 @@ struct CyberGlowingCardModifier: ViewModifier {
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(Color(.secondarySystemGroupedBackground))
-                    .shadow(color: glowColor.opacity(0.25), radius: 18, x: 0, y: 8)
+                    .shadow(color: Color.black.opacity(0.035), radius: 8, x: 0, y: 2)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [glowColor.opacity(0.8), glowColor.opacity(0.2)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 2
-                    )
+                    .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
             )
     }
 }
@@ -169,19 +150,12 @@ struct NeonGlassCardModifier: ViewModifier {
             .padding(16)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .shadow(color: neonTint.opacity(0.2), radius: 16, x: 0, y: 8)
+                    .fill(Color(.secondarySystemGroupedBackground))
+                    .shadow(color: Color.black.opacity(0.035), radius: 8, x: 0, y: 2)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(
-                        LinearGradient(
-                            colors: [neonTint.opacity(0.6), neonTint.opacity(0.1)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1.5
-                    )
+                    .stroke(Color.primary.opacity(0.07), lineWidth: 0.5)
             )
     }
 }
@@ -212,42 +186,41 @@ extension View {
     }
 }
 
-// MARK: - Gen Z Electric Design System Tokens & Gradients
+// MARK: - Professional Design Tokens
 enum SelfUpStyle {
-    // Electric Gen Z Color Tokens
-    static let primaryIndigo = Color(red: 0.45, green: 0.35, blue: 0.98) // Electric Violet Indigo
-    static let cyberLime = Color(red: 0.52, green: 0.88, blue: 0.12)     // #84CC16
-    static let hyperMagenta = Color(red: 0.93, green: 0.28, blue: 0.60)   // #EC4899
-    static let cyberCyan = Color(red: 0.04, green: 0.76, blue: 0.96)      // #06B6D4
-    static let neonGold = Color(red: 0.98, green: 0.72, blue: 0.08)       // #FACC15
-    static let accentTeal = Color(red: 0.08, green: 0.82, blue: 0.68)
-    static let rewardGold = Color(red: 0.98, green: 0.65, blue: 0.08)
+    static let primaryIndigo = Color(red: 0.18, green: 0.31, blue: 0.55)
+    static let cyberLime = Color(red: 0.16, green: 0.56, blue: 0.38)
+    static let hyperMagenta = Color(red: 0.72, green: 0.25, blue: 0.29)
+    static let cyberCyan = Color(red: 0.16, green: 0.47, blue: 0.61)
+    static let neonGold = Color(red: 0.68, green: 0.48, blue: 0.14)
+    static let accentTeal = Color(red: 0.12, green: 0.48, blue: 0.45)
+    static let rewardGold = Color(red: 0.68, green: 0.48, blue: 0.14)
     
-    // Gen Z Dynamic Gradients
+    // Kept as gradients for API compatibility, but deliberately low-contrast.
     static let cyberGradient = AngularGradient(
-        colors: [cyberLime, primaryIndigo, hyperMagenta, cyberCyan, cyberLime],
+        colors: [primaryIndigo, cyberCyan, primaryIndigo],
         center: .center
     )
     
     static let lifeScoreGradient = AngularGradient(
-        colors: [cyberLime, primaryIndigo, hyperMagenta, cyberLime],
+        colors: [primaryIndigo, cyberCyan, primaryIndigo],
         center: .center
     )
     
     static let heroGradient = LinearGradient(
-        colors: [primaryIndigo, hyperMagenta],
+        colors: [primaryIndigo, Color(red: 0.24, green: 0.39, blue: 0.64)],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
     static let electricLimeGradient = LinearGradient(
-        colors: [cyberLime, Color(red: 0.1, green: 0.75, blue: 0.4)],
+        colors: [cyberLime, cyberLime.opacity(0.82)],
         startPoint: .leading,
         endPoint: .trailing
     )
     
     static let goldGradient = LinearGradient(
-        colors: [neonGold, Color(red: 0.98, green: 0.45, blue: 0.08)],
+        colors: [neonGold, Color(red: 0.55, green: 0.37, blue: 0.10)],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
@@ -265,7 +238,7 @@ enum SelfUpStyle {
     )
     
     static let progressGradient = LinearGradient(
-        colors: [cyberLime, primaryIndigo, hyperMagenta],
+        colors: [primaryIndigo, cyberCyan],
         startPoint: .leading,
         endPoint: .trailing
     )
@@ -278,9 +251,55 @@ enum SelfUpStyle {
 }
 
 extension Color {
-    static let emerald = Color(red: 0.10, green: 0.80, blue: 0.46)
-    static let coral = Color(red: 0.95, green: 0.32, blue: 0.45)
+    static let emerald = Color(red: 0.16, green: 0.56, blue: 0.38)
+    static let coral = Color(red: 0.72, green: 0.25, blue: 0.29)
     static let darkGray = Color(white: 0.12)
 }
 
+// MARK: - Completion Motion
+struct CompletionMotionView: View {
+    var color: Color = SelfUpStyle.cyberLime
+    var compact = false
 
+    @State private var progress: CGFloat = 0
+    @State private var checkScale: CGFloat = 0.35
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(color.opacity(1 - progress), lineWidth: compact ? 2 : 4)
+                .frame(width: compact ? 34 : 76, height: compact ? 34 : 76)
+                .scaleEffect(0.55 + progress * 1.15)
+
+            ForEach(0..<10, id: \.self) { index in
+                let angle = Double(index) / 10 * Double.pi * 2
+                Capsule()
+                    .fill(index.isMultiple(of: 2) ? color : SelfUpStyle.primaryIndigo)
+                    .frame(width: compact ? 3 : 5, height: compact ? 7 : 12)
+                    .offset(
+                        x: cos(angle) * progress * (compact ? 29 : 64),
+                        y: sin(angle) * progress * (compact ? 29 : 64)
+                    )
+                    .rotationEffect(.radians(angle + Double.pi / 2))
+                    .opacity(1 - progress)
+            }
+
+            Image(systemName: "checkmark")
+                .font(.system(size: compact ? 12 : 28, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: compact ? 28 : 58, height: compact ? 28 : 58)
+                .background(Circle().fill(color))
+                .scaleEffect(checkScale)
+        }
+        .allowsHitTesting(false)
+        .onAppear {
+            withAnimation(.spring(response: 0.42, dampingFraction: 0.58)) {
+                checkScale = 1
+            }
+            withAnimation(.easeOut(duration: 0.72)) {
+                progress = 1
+            }
+        }
+        .accessibilityHidden(true)
+    }
+}

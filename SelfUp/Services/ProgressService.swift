@@ -37,7 +37,7 @@ enum ProgressService {
     }
     
     static func lifeScore(habits: [Habit], tasks: [TaskItem], transactions: [Transaction], on date: Date, calendar: Calendar = .current) -> Int {
-        let activeHabits = habits.filter { !$0.isArchived }
+        let activeHabits = habits.filter { !$0.isArchived && $0.isScheduled(on: date, calendar: calendar) }
         let completedActiveHabitsCount = activeHabits.filter { isCompleted($0, on: date, calendar: calendar) }.count
         let habitFraction = activeHabits.isEmpty ? 0.0 : Double(completedActiveHabitsCount) / Double(activeHabits.count)
         

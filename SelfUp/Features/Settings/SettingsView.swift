@@ -118,7 +118,10 @@ struct SettingsView: View {
                 xpReward: h.xpReward,
                 isArchived: h.isArchived,
                 createdAt: h.createdAt,
-                completions: h.completions.map { $0.date }
+                completions: h.completions.map { $0.date },
+                scheduledWeekdays: h.scheduledWeekdays,
+                reminderHour: h.reminderHour,
+                reminderMinute: h.reminderMinute
             )
         }
         
@@ -129,7 +132,13 @@ struct SettingsView: View {
                 dueDate: t.dueDate,
                 priority: t.priority.rawValue,
                 completedAt: t.completedAt,
-                xpReward: t.xpReward
+                xpReward: t.xpReward,
+                period: t.effectivePeriod.rawValue,
+                workflowStatus: t.effectiveStatus.rawValue,
+                startedAt: t.startedAt,
+                recurrence: t.effectiveRecurrence.rawValue,
+                reminderHour: t.reminderHour,
+                reminderMinute: t.reminderMinute
             )
         }
         
@@ -190,7 +199,10 @@ struct SettingsView: View {
                 tintName: hb.tintName,
                 xpReward: hb.xpReward,
                 isArchived: hb.isArchived,
-                createdAt: hb.createdAt
+                createdAt: hb.createdAt,
+                scheduledWeekdays: hb.scheduledWeekdays ?? 0,
+                reminderHour: hb.reminderHour,
+                reminderMinute: hb.reminderMinute
             )
             h.id = hb.id
             modelContext.insert(h)
@@ -209,7 +221,13 @@ struct SettingsView: View {
                 dueDate: tb.dueDate,
                 priority: priority,
                 completedAt: tb.completedAt,
-                xpReward: tb.xpReward
+                xpReward: tb.xpReward,
+                period: tb.period.flatMap(TaskPeriod.init(rawValue:)) ?? .inbox,
+                workflowStatus: tb.workflowStatus.flatMap(TaskWorkflowStatus.init(rawValue:)) ?? .planned,
+                startedAt: tb.startedAt,
+                recurrence: tb.recurrence.flatMap(TaskRecurrence.init(rawValue:)) ?? .none,
+                reminderHour: tb.reminderHour,
+                reminderMinute: tb.reminderMinute
             )
             t.id = tb.id
             modelContext.insert(t)
