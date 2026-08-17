@@ -3,6 +3,7 @@ import SwiftData
 
 struct HabitsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Query(filter: #Predicate<Habit> { !$0.isArchived }, sort: \Habit.createdAt) private var activeHabits: [Habit]
     
     @State private var showingEditor = false
@@ -11,19 +12,29 @@ struct HabitsView: View {
     
     private let trackingService = TrackingService()
     
-    private let columns = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
-    ]
+    private var columns: [GridItem] {
+        if dynamicTypeSize.isAccessibilitySize {
+            return [GridItem(.flexible())]
+        }
+        return [
+            GridItem(
+                .adaptive(minimum: 156, maximum: 280),
+                spacing: SelfUpStyle.Spacing.large
+            )
+        ]
+    }
+
+    private var scheduledHabitsToday: [Habit] {
+        activeHabits.filter { $0.isScheduled(on: Date()) }
+    }
     
     private var completedTodayCount: Int {
-        activeHabits.filter { $0.isScheduled(on: Date()) && ProgressService.isCompleted($0, on: Date()) }.count
+        scheduledHabitsToday.filter { ProgressService.isCompleted($0, on: Date()) }.count
     }
     
     private var completionRate: Double {
-        let scheduled = activeHabits.filter { $0.isScheduled(on: Date()) }
-        guard !scheduled.isEmpty else { return 0 }
-        return Double(completedTodayCount) / Double(scheduled.count)
+        guard !scheduledHabitsToday.isEmpty else { return 0 }
+        return Double(completedTodayCount) / Double(scheduledHabitsToday.count)
     }
     
     var body: some View {
@@ -44,9 +55,9 @@ struct HabitsView: View {
                                     Text("DAILY HABIT STREAK")
                                         .font(.caption2)
                                         .fontWeight(.bold)
-                                        .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                        .foregroundStyle(SelfUpStyle.brand)
                                         .tracking(1.2)
-                                    Text("\(completedTodayCount) of \(activeHabits.count) Done")
+                                    Text("\(completedTodayCount) of \(scheduledHabitsToday.count) Done")
                                         .font(.system(.title3, design: .default))
                                         .fontWeight(.bold)
                                 }
@@ -64,10 +75,13 @@ struct HabitsView: View {
                                         .frame(width: 52, height: 52)
                                     Text("\(Int(completionRate * 100))%")
                                         .font(.system(size: 11, weight: .bold, design: .default))
-                                        .foregroundStyle(SelfUpStyle.cyberLime)
+                                        .foregroundStyle(SelfUpStyle.success)
                                 }
                             }
-                            .bentoCard(cornerRadius: 16)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel("Today's habit completion")
+                            .accessibilityValue("\(completedTodayCount) of \(scheduledHabitsToday.count), \(Int(completionRate * 100)) percent")
+                            .bentoCard(cornerRadius: SelfUpStyle.Radius.medium)
                             .padding(.horizontal)
                             
                             // Habit Cards Grid
@@ -110,6 +124,7 @@ struct HabitsView: View {
                     } label: {
                         Image(systemName: "gearshape")
                     }
+                    .accessibilityLabel("Settings")
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
@@ -117,8 +132,9 @@ struct HabitsView: View {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
-                            .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            .foregroundStyle(SelfUpStyle.brand)
                     }
+                    .accessibilityLabel("Add habit")
                 }
             }
             .sheet(isPresented: $showingEditor) {
@@ -148,6 +164,8 @@ struct HabitCard: View {
     let habit: Habit
     let trackingService: TrackingService
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var celebrationToken = 0
     
     private var isCompletedToday: Bool {
@@ -159,15 +177,11 @@ struct HabitCard: View {
     }
     
     private var tintColor: Color {
-        switch habit.tintName {
-        case "green": return .emerald
-        case "orange": return .orange
-        case "purple": return .purple
-        case "red": return .coral
-        case "teal": return .teal
-        case "indigo": return SelfUpStyle.primaryIndigo
-        default: return SelfUpStyle.primaryIndigo
-        }
+        SelfUpStyle.habitTint(named: habit.tintName)
+    }
+
+    private var tintFillColor: Color {
+        SelfUpStyle.habitFill(named: habit.tintName)
     }
     
     private var last7DaysCompletions: [Bool] {
@@ -185,7 +199,7 @@ struct HabitCard: View {
             HStack {
                 ZStack {
                     Circle()
-                        .fill(isCompletedToday ? tintColor : tintColor.opacity(0.12))
+                        .fill(isCompletedToday ? tintFillColor : tintColor.opacity(0.12))
                         .frame(width: 44, height: 44)
                     Image(systemName: habit.symbol)
                         .font(.title3)
@@ -193,34 +207,32 @@ struct HabitCard: View {
                 }
                 Spacer()
                 
-                Button {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
-                        let didComplete = (try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)) == true
-                        if didComplete {
-                            celebrationToken += 1
-                            Haptics.success()
-                        } else {
-                            Haptics.light()
-                        }
-                    }
-                } label: {
+                Button(action: toggleCompletion) {
                     ZStack {
                         Circle()
-                            .fill(isCompletedToday ? SelfUpStyle.cyberLime : Color.primary.opacity(0.06))
-                            .frame(width: 34, height: 34)
+                            .fill(isCompletedToday ? SelfUpStyle.successFill : Color.primary.opacity(0.06))
+                            .frame(width: SelfUpStyle.Control.compactIcon, height: SelfUpStyle.Control.compactIcon)
                         Circle()
                             .stroke(isCompletedToday ? Color.clear : Color.primary.opacity(0.12), lineWidth: 1.5)
-                            .frame(width: 34, height: 34)
+                            .frame(width: SelfUpStyle.Control.compactIcon, height: SelfUpStyle.Control.compactIcon)
                         Image(systemName: "checkmark")
                             .font(.system(size: 13, weight: .bold))
                             .foregroundStyle(isCompletedToday ? .white : Color.primary.opacity(0.35))
                         if celebrationToken > 0 {
-                            CompletionMotionView(color: tintColor, compact: true)
+                            CompletionMotionView(color: tintFillColor, compact: true)
                                 .id(celebrationToken)
                         }
                     }
+                    .frame(
+                        minWidth: SelfUpStyle.Control.minimumTapTarget,
+                        minHeight: SelfUpStyle.Control.minimumTapTarget
+                    )
+                    .contentShape(Rectangle())
                 }
                 .pressableScale(scale: 0.88)
+                .accessibilityLabel("Completion for \(habit.title)")
+                .accessibilityValue(isCompletedToday ? "Completed today" : "Not completed today")
+                .accessibilityHint(isCompletedToday ? "Double tap to mark incomplete" : "Double tap to mark complete")
             }
             
             // Text Details
@@ -228,29 +240,29 @@ struct HabitCard: View {
                 Text(habit.title)
                     .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
-                    .lineLimit(1)
+                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 2)
                 
                 HStack(spacing: 6) {
                     if currentStreak > 0 {
                         HStack(spacing: 3) {
                             Image(systemName: "flame.fill")
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(SelfUpStyle.warning)
                             Text("\(currentStreak)d streak")
                         }
                         .font(.caption2)
                         .fontWeight(.bold)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 3)
-                        .background(Capsule().fill(Color.orange.opacity(0.12)))
-                        .foregroundStyle(.orange)
+                        .background(Capsule().fill(SelfUpStyle.warning.opacity(0.12)))
+                        .foregroundStyle(SelfUpStyle.warning)
                     } else {
                         Text("+\(habit.xpReward) XP")
                             .font(.caption2)
                             .fontWeight(.bold)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.1)))
-                            .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            .background(Capsule().fill(SelfUpStyle.brand.opacity(0.1)))
+                            .foregroundStyle(SelfUpStyle.brand)
                     }
                 }
             }
@@ -263,6 +275,9 @@ struct HabitCard: View {
                         .frame(height: 5)
                 }
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Last seven days")
+            .accessibilityValue("\(last7DaysCompletions.filter { $0 }.count) days completed")
         }
         .padding(14)
         .background(
@@ -274,5 +289,25 @@ struct HabitCard: View {
             RoundedRectangle(cornerRadius: 18)
                 .stroke(isCompletedToday ? tintColor.opacity(0.4) : Color.primary.opacity(0.06), lineWidth: 1.5)
         )
+    }
+
+    private func toggleCompletion() {
+        if reduceMotion {
+            applyCompletionToggle()
+        } else {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
+                applyCompletionToggle()
+            }
+        }
+    }
+
+    private func applyCompletionToggle() {
+        let didComplete = (try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)) == true
+        if didComplete {
+            celebrationToken += 1
+            Haptics.success()
+        } else {
+            Haptics.light()
+        }
     }
 }

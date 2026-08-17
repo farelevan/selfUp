@@ -47,7 +47,7 @@ struct VibeScoreWidgetEntryView: View {
         case .accessoryRectangular:
             LockScreenRectangularWidget(snapshot: entry.snapshot)
         case .accessoryInline:
-            Text("⚡ Vibe: \(entry.snapshot.vibeScore) • \(entry.snapshot.completedHabits)/\(entry.snapshot.totalHabits) Habits")
+            Label("Life \(entry.snapshot.vibeScore) • \(entry.snapshot.completedHabits)/\(entry.snapshot.totalHabits) Habits", systemImage: "sparkles")
         default:
             SmallVibeWidget(snapshot: entry.snapshot)
         }
@@ -65,12 +65,12 @@ struct SmallVibeWidget: View {
                     .font(.system(size: 9, weight: .bold, design: .rounded))
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.2)))
-                    .foregroundStyle(SelfUpStyle.primaryIndigo)
+                    .background(Capsule().fill(SelfUpStyle.brand.opacity(0.14)))
+                    .foregroundStyle(SelfUpStyle.brand)
                 Spacer()
                 Image(systemName: "sparkles")
                     .font(.caption2)
-                    .foregroundStyle(SelfUpStyle.cyberLime)
+                    .foregroundStyle(SelfUpStyle.success)
             }
             
             ZStack {
@@ -86,14 +86,13 @@ struct SmallVibeWidget: View {
                     )
                     .rotationEffect(.degrees(-90))
                     .frame(width: 72, height: 72)
-                    .shadow(color: SelfUpStyle.cyberLime.opacity(0.4), radius: 6, x: 0, y: 2)
                 
                 VStack(spacing: 0) {
                     Text("\(snapshot.vibeScore)")
                         .font(.system(size: 22, weight: .black, design: .rounded))
-                    Text("VIBE")
+                    Text("LIFE")
                         .font(.system(size: 7, weight: .black))
-                        .foregroundStyle(SelfUpStyle.cyberLime)
+                        .foregroundStyle(SelfUpStyle.success)
                 }
             }
             
@@ -127,14 +126,13 @@ struct MediumVibeWidget: View {
                     )
                     .rotationEffect(.degrees(-90))
                     .frame(width: 86, height: 86)
-                    .shadow(color: SelfUpStyle.cyberLime.opacity(0.4), radius: 8, x: 0, y: 3)
                 
                 VStack(spacing: 0) {
                     Text("\(snapshot.vibeScore)")
                         .font(.system(size: 26, weight: .black, design: .rounded))
-                    Text("VIBE")
+                    Text("LIFE")
                         .font(.system(size: 8, weight: .black))
-                        .foregroundStyle(SelfUpStyle.cyberLime)
+                        .foregroundStyle(SelfUpStyle.success)
                 }
             }
             
@@ -144,7 +142,7 @@ struct MediumVibeWidget: View {
                     HStack(spacing: 4) {
                         Image(systemName: "crown.fill")
                             .font(.caption2)
-                            .foregroundStyle(SelfUpStyle.neonGold)
+                            .foregroundStyle(SelfUpStyle.achievement)
                         Text("LEVEL \(snapshot.level)")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
                     }
@@ -161,7 +159,7 @@ struct MediumVibeWidget: View {
                         Spacer()
                         Text("\(snapshot.completedHabits)/\(snapshot.totalHabits)")
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(SelfUpStyle.cyberLime)
+                            .foregroundStyle(SelfUpStyle.success)
                     }
                     
                     let habitProgress = snapshot.totalHabits > 0 ? Double(snapshot.completedHabits) / Double(snapshot.totalHabits) : 0.0
@@ -181,7 +179,7 @@ struct MediumVibeWidget: View {
                 HStack(spacing: 6) {
                     Image(systemName: "checklist")
                         .font(.caption2)
-                        .foregroundStyle(SelfUpStyle.primaryIndigo)
+                        .foregroundStyle(SelfUpStyle.brand)
                     Text("Focus Tasks: \(snapshot.pendingTasks) Pending")
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(.secondary)
@@ -218,7 +216,7 @@ struct LockScreenRectangularWidget: View {
             HStack(spacing: 4) {
                 Image(systemName: "sparkles")
                     .font(.caption2)
-                Text("SelfUp Vibe: \(snapshot.vibeScore)")
+                Text("SelfUp Life: \(snapshot.vibeScore)")
                     .font(.system(size: 12, weight: .bold, design: .rounded))
             }
             Text("Habits: \(snapshot.completedHabits)/\(snapshot.totalHabits) Done")
@@ -238,8 +236,8 @@ struct VibeScoreWidget: Widget {
         StaticConfiguration(kind: kind, provider: VibeScoreProvider()) { entry in
             VibeScoreWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("SelfUp Vibe & Progress")
-        .description("Track your Vibe Score, Habit streaks, and XP level right from your Home or Lock Screen.")
+        .configurationDisplayName("SelfUp Life & Progress")
+        .description("Track your Life Score, habit streaks, and XP level from your Home or Lock Screen.")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular, .accessoryInline])
     }
 }

@@ -1,9 +1,45 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import UIKit
+
+final class SelfUpNotificationDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .list, .sound])
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        guard response.notification.request.identifier.hasPrefix(NotificationManager.funBudgetIdentifierPrefix) else {
+            completionHandler()
+            return
+        }
+
+        Task { @MainActor in
+            AppRouter.shared.navigate(to: .money)
+            completionHandler()
+        }
+    }
+}
 
 @main
 struct SelfUpApp: App {
+    @UIApplicationDelegateAdaptor(SelfUpNotificationDelegate.self) private var notificationDelegate
     @State private var router = AppRouter.shared
     
     var sharedModelContainer: ModelContainer = {
@@ -26,27 +62,358 @@ struct SelfUpApp: App {
     var body: some Scene {
         WindowGroup {
             RootView(router: router)
+                .overlay {
+                    FunBudgetLifecycleMonitor()
+                        .frame(width: 0, height: 0)
+                        .allowsHitTesting(false)
+                }
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+private struct FunBudgetLifecycleMonitor: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @Query(sort: \Transaction.date) private var transactions: [Transaction]
+    @AppStorage("selected_currency") private var currencySymbol = "Rp"
+
+    private var transactionSignature: String {
+        transactions.map { transaction in
+            [
+                transaction.id.uuidString,
+                NSDecimalNumber(decimal: transaction.amount).stringValue,
+                transaction.type.rawValue,
+                transaction.category,
+                String(transaction.date.timeIntervalSinceReferenceDate)
+            ].joined(separator: "|")
+        }.joined(separator: ";")
+    }
+
+    var body: some View {
+        Color.clear
+            .task { await reconcile() }
+            .onChange(of: transactionSignature) { _, _ in
+                Task { await reconcile() }
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                guard newPhase == .active else { return }
+                Task { await reconcile() }
+            }
+            .onChange(of: currencySymbol) { _, _ in
+                Task { await reconcile() }
+            }
+    }
+
+    private func reconcile() async {
+        _ = await NotificationManager.reconcileFunBudget(
+            transactions: transactions,
+            currencySymbol: currencySymbol,
+            now: Date(),
+            calendar: .autoupdatingCurrent
+        )
     }
 }
 
 struct RootView: View {
     @Bindable var router: AppRouter
     @AppStorage("onboarding_completed") private var onboardingCompleted = false
+    @AppStorage("has_seen_launch_splash") private var hasSeenLaunchSplash = false
 
     var body: some View {
         if onboardingCompleted {
-            SplashScreenView { ContentView(router: router) }
+            if hasSeenLaunchSplash {
+                ContentView(router: router)
+            } else {
+                SplashScreenView {
+                    ContentView(router: router)
+                        .onAppear { hasSeenLaunchSplash = true }
+                }
+            }
         } else {
             OnboardingView { onboardingCompleted = true }
         }
     }
 }
 
+enum FunBudgetAuthorizationResult: Equatable {
+    case authorized
+    case denied
+    case failed(String)
+}
+
+enum FunBudgetNotificationResult: Equatable {
+    case unchanged
+    case scheduled
+    case notified
+    case cancelled
+    case notificationsDisabled
+    case notAuthorized
+    case failed(String)
+}
+
 enum NotificationManager {
+    static let funBudgetIdentifierPrefix = "selfup.fun-budget."
+    @MainActor private static var funBudgetReconcileActive = false
+    @MainActor private static var funBudgetReconcileWaiters: [CheckedContinuation<Void, Never>] = []
+
     static func requestAuthorization() async -> Bool {
         (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])) ?? false
+    }
+
+    static func requestFunBudgetAuthorization() async -> FunBudgetAuthorizationResult {
+        let center = UNUserNotificationCenter.current()
+        let settings = await center.notificationSettings()
+
+        switch settings.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            return .authorized
+        case .denied:
+            return .denied
+        case .notDetermined:
+            do {
+                let granted = try await center.requestAuthorization(options: [.alert, .sound])
+                return granted ? .authorized : .denied
+            } catch {
+                return .failed(error.localizedDescription)
+            }
+        @unknown default:
+            return .denied
+        }
+    }
+
+    @MainActor
+    static func reconcileFunBudget(
+        transactions: [Transaction],
+        currencySymbol: String,
+        now: Date,
+        calendar: Calendar,
+        defaults: UserDefaults = .standard
+    ) async -> FunBudgetNotificationResult {
+        await acquireFunBudgetReconcile()
+        defer { releaseFunBudgetReconcile() }
+
+        let store = FunBudgetStore(defaults: defaults)
+        let snapshot = FunBudgetService.snapshot(
+            for: transactions,
+            limit: store.limit,
+            now: now,
+            calendar: calendar
+        )
+        let center = UNUserNotificationCenter.current()
+        let identifier = funBudgetIdentifier(for: snapshot.periodKey)
+        let pendingRequests = await center.pendingNotificationRequests()
+        let staleIdentifiers = pendingRequests
+            .map(\.identifier)
+            .filter { $0.hasPrefix(funBudgetIdentifierPrefix) && $0 != identifier }
+        if !staleIdentifiers.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: staleIdentifiers)
+        }
+
+        if store.scheduledPeriod != nil, store.scheduledPeriod != snapshot.periodKey {
+            store.clearScheduled()
+        }
+
+        if store.scheduledPeriod == snapshot.periodKey,
+           let scheduledDate = store.scheduledDate,
+           now >= scheduledDate {
+            // Delivery has no reliable background callback. Once its trigger has
+            // passed, consume the period so clearing Notification Center cannot
+            // cause another warning in the same month.
+            store.recordNotified(period: snapshot.periodKey)
+        }
+
+        let hasPendingRequest = pendingRequests.contains { $0.identifier == identifier }
+
+        guard store.notificationsEnabled else {
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            if store.scheduledPeriod == snapshot.periodKey {
+                store.clearScheduled()
+            }
+            return hasPendingRequest ? .cancelled : .notificationsDisabled
+        }
+
+        if store.notifiedPeriod == snapshot.periodKey {
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            return .unchanged
+        }
+
+        guard snapshot.isConfigured else {
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            if store.scheduledPeriod == snapshot.periodKey {
+                store.clearScheduled()
+            }
+            return hasPendingRequest ? .cancelled : .unchanged
+        }
+
+        let settings = await center.notificationSettings()
+        guard isAuthorized(settings.authorizationStatus) else {
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            if store.scheduledPeriod == snapshot.periodKey {
+                store.clearScheduled()
+            }
+            return .notAuthorized
+        }
+
+        guard snapshot.warningAction != .none else {
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            if store.scheduledPeriod == snapshot.periodKey {
+                store.clearScheduled()
+            }
+            return hasPendingRequest ? .cancelled : .unchanged
+        }
+
+        let content = funBudgetContent(for: snapshot, currencySymbol: currencySymbol)
+        let contentFingerprint = funBudgetContentFingerprint(
+            for: snapshot,
+            currencySymbol: currencySymbol
+        )
+
+        switch snapshot.warningAction {
+        case .none:
+            return .unchanged
+
+        case .schedule(let date):
+            if store.scheduledPeriod == snapshot.periodKey,
+               let storedDate = store.scheduledDate,
+               abs(storedDate.timeIntervalSince(date)) < 1,
+               store.scheduledFingerprint == contentFingerprint,
+               hasPendingRequest {
+                return .unchanged
+            }
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            store.clearScheduled()
+
+            var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+            components.timeZone = calendar.timeZone
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+            do {
+                try await center.add(request)
+                store.recordScheduled(
+                    period: snapshot.periodKey,
+                    date: date,
+                    fingerprint: contentFingerprint
+                )
+                return .scheduled
+            } catch {
+                return .failed(error.localizedDescription)
+            }
+
+        case .notifyNow:
+            if hasPendingRequest {
+                center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            }
+            store.clearScheduled()
+            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
+
+            do {
+                try await center.add(request)
+                store.recordNotified(period: snapshot.periodKey)
+                return .notified
+            } catch {
+                return .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    @MainActor
+    private static func acquireFunBudgetReconcile() async {
+        guard funBudgetReconcileActive else {
+            funBudgetReconcileActive = true
+            return
+        }
+
+        await withCheckedContinuation { continuation in
+            funBudgetReconcileWaiters.append(continuation)
+        }
+    }
+
+    @MainActor
+    private static func releaseFunBudgetReconcile() {
+        guard !funBudgetReconcileWaiters.isEmpty else {
+            funBudgetReconcileActive = false
+            return
+        }
+
+        let next = funBudgetReconcileWaiters.removeFirst()
+        next.resume()
+    }
+
+    static func funBudgetIdentifier(for periodKey: String) -> String {
+        funBudgetIdentifierPrefix + periodKey
+    }
+
+    private static func isAuthorized(_ status: UNAuthorizationStatus) -> Bool {
+        switch status {
+        case .authorized, .provisional, .ephemeral:
+            return true
+        case .notDetermined, .denied:
+            return false
+        @unknown default:
+            return false
+        }
+    }
+
+    private static func funBudgetContent(
+        for snapshot: FunBudgetSnapshot,
+        currencySymbol: String
+    ) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        let spent = "\(currencySymbol) \(NSDecimalNumber(decimal: snapshot.spent).stringValue)"
+        let limit = "\(currencySymbol) \(NSDecimalNumber(decimal: snapshot.limit).stringValue)"
+
+        if snapshot.attention == .depleted {
+            content.title = "Fun budget depleted"
+            if snapshot.overage > 0 {
+                let overage = "\(currencySymbol) \(NSDecimalNumber(decimal: snapshot.overage).stringValue)"
+                content.body = "Entertainment spending is \(overage) over your \(limit) monthly budget."
+            } else {
+                content.body = "You've used all of your \(limit) Entertainment budget this month."
+            }
+        } else {
+            content.title = "Fun budget nearly depleted"
+            content.body = "You've spent \(spent) of your \(limit) Entertainment budget this month."
+        }
+
+        content.sound = .default
+        content.threadIdentifier = "selfup.fun-budget"
+        content.userInfo = ["destination": "money", "period": snapshot.periodKey]
+        return content
+    }
+
+    private static func funBudgetContentFingerprint(
+        for snapshot: FunBudgetSnapshot,
+        currencySymbol: String
+    ) -> String {
+        let attention: String
+        switch snapshot.attention {
+        case .unconfigured: attention = "unconfigured"
+        case .onTrack: attention = "on-track"
+        case .nearlyDepleted: attention = "nearly-depleted"
+        case .depleted: attention = "depleted"
+        }
+
+        return [
+            snapshot.periodKey,
+            currencySymbol,
+            NSDecimalNumber(decimal: snapshot.spent).stringValue,
+            NSDecimalNumber(decimal: snapshot.limit).stringValue,
+            NSDecimalNumber(decimal: snapshot.overage).stringValue,
+            attention
+        ].joined(separator: "|")
     }
 
     static func scheduleDailySummary(hour: Int, minute: Int) {
@@ -130,6 +497,8 @@ struct OnboardingView: View {
                         Text("IDR (Rp)").tag("Rp")
                         Text("USD ($)").tag("$")
                         Text("EUR (€)").tag("€")
+                        Text("GBP (£)").tag("£")
+                        Text("JPY (¥)").tag("¥")
                     }
                 }
 
@@ -203,17 +572,12 @@ struct ContentView: View {
                 }
                 .tag(AppDestination.tasks)
             
-            RewardsView()
+            RewardsView(router: router)
                 .tabItem {
-                    Label("Rewards", systemImage: "gift")
+                    Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
                 }
                 .tag(AppDestination.rewards)
-            
-            InsightsView()
-                .tabItem {
-                    Label("Insights", systemImage: "chart.bar")
-                }
-                .tag(AppDestination.insights)
         }
+        .tint(SelfUpStyle.brand)
     }
 }

@@ -10,6 +10,9 @@ struct DailyActivity: Identifiable {
 
 struct TodayView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @AppStorage("profile_name") private var profileName = ""
     @Query private var habits: [Habit]
     @Query private var tasks: [TaskItem]
     @Query private var transactions: [Transaction]
@@ -56,71 +59,24 @@ struct TodayView: View {
         }
         return list
     }
+
+    private var activityAccessibilitySummary: String {
+        guard let latest = activityData.last else { return "No Life Score data" }
+        let scores = activityData.map(\.score)
+        return "Latest score \(latest.score) out of 100; seven-day range \(scores.min() ?? 0) to \(scores.max() ?? 0)."
+    }
     
     var body: some View {
+        let progress = snapshot
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    // Header Greeting with App Logo Branding
-                    HStack {
-                        VStack(alignment: .leading, spacing: 6) {
-                            SelfUpLogoView(style: .compactHeader)
-                            
-                            Text(Date().formatted(date: .complete, time: .omitted).uppercased())
-                                .font(.caption2)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.secondary)
-                                .tracking(1.2)
-                        }
-                        Spacer()
-                        
-                        Button {
-                            showingSettings = true
-                        } label: {
-                            Image(systemName: "gearshape.fill")
-                                .font(.title3)
-                                .foregroundStyle(.secondary)
-                                .padding(10)
-                                .background(Circle().fill(Color(.tertiarySystemFill)))
-                        }
-                    }
+                    header
                     .padding(.horizontal)
                     
                     // Level Progress Bento Card
                     VStack(alignment: .leading, spacing: 14) {
-                        HStack {
-                            ZStack {
-                                Circle()
-                                    .fill(SelfUpStyle.goldGradient)
-                                    .frame(width: 38, height: 38)
-                                Image(systemName: "crown.fill")
-                                    .foregroundStyle(.white)
-                                    .font(.subheadline)
-                            }
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("LEVEL \(snapshot.level)")
-                                    .font(.system(.headline, design: .default))
-                                    .fontWeight(.bold)
-                                Text("\(snapshot.xp) XP Total")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            
-                            Spacer()
-                            
-                            HStack(spacing: 4) {
-                                Image(systemName: "bolt.fill")
-                                    .font(.caption2)
-                                    .foregroundStyle(SelfUpStyle.cyberLime)
-                                Text("\(100 - (snapshot.xp % 100)) XP NEXT LEVEL")
-                                    .font(.system(size: 10, weight: .bold, design: .default))
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.15)))
-                            .foregroundStyle(SelfUpStyle.primaryIndigo)
-                        }
+                        levelHeader(progress)
                         
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
@@ -130,103 +86,35 @@ struct TodayView: View {
                                 
                                 Capsule()
                                     .fill(SelfUpStyle.progressGradient)
-                                    .frame(width: max(14, geo.size.width * CGFloat(snapshot.xpProgress)), height: 12)
-                                    .animation(.spring(response: 0.8, dampingFraction: 0.7), value: snapshot.xpProgress)
+                                    .frame(width: geo.size.width * CGFloat(progress.xpProgress), height: 12)
+                                    .animation(reduceMotion ? nil : .spring(response: 0.8, dampingFraction: 0.7), value: progress.xpProgress)
                             }
                         }
                         .frame(height: 12)
                     }
-                    .premiumCard(cornerRadius: 16)
+                    .premiumCard(cornerRadius: 18)
                     .padding(.horizontal)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Level \(progress.level), \(progress.levelTitle)")
+                    .accessibilityValue("\(progress.xpIntoLevel) of \(progress.xpForNextLevel) XP; \(progress.xpToNextLevel) XP to next level")
                     
                     // Life Score Bento Gauge
-                    HStack(alignment: .center, spacing: 20) {
-                        // Life Score Circular Gauge
-                        VStack(spacing: 6) {
-                            ZStack {
-                                Circle()
-                                    .stroke(Color.primary.opacity(0.08), lineWidth: 14)
-                                    .frame(width: 104, height: 104)
-                                
-                                Circle()
-                                    .trim(from: 0, to: animateScore ? CGFloat(snapshot.lifeScore) / 100.0 : 0)
-                                    .stroke(
-                                        SelfUpStyle.lifeScoreGradient,
-                                        style: StrokeStyle(lineWidth: 14, lineCap: .round)
-                                    )
-                                    .rotationEffect(.degrees(-90))
-                                    .frame(width: 104, height: 104)
-                                    .animation(.spring(response: 1.2, dampingFraction: 0.8), value: animateScore)
-                                
-                                VStack(spacing: 0) {
-                                    Text("\(snapshot.lifeScore)")
-                                        .font(.system(size: 32, weight: .bold, design: .default))
-                                    Text("SCORE")
-                                        .font(.system(size: 10, weight: .bold))
-                                        .foregroundStyle(SelfUpStyle.cyberLime)
-                                        .tracking(1.5)
-                                }
+                    Group {
+                        if dynamicTypeSize.isAccessibilitySize {
+                            VStack(alignment: .leading, spacing: 18) {
+                                lifeScoreGauge(progress)
+                                summaryMetrics
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        } else {
+                            HStack(alignment: .center, spacing: 20) {
+                                lifeScoreGauge(progress)
+                                summaryMetrics
+                                Spacer()
                             }
                         }
-                        
-                        // Side Summary Metrics
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack(spacing: 8) {
-                                ZStack {
-                                    Circle().fill(SelfUpStyle.cyberLime.opacity(0.18)).frame(width: 30, height: 30)
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(SelfUpStyle.cyberLime)
-                                        .font(.subheadline)
-                                }
-                                VStack(alignment: .leading, spacing: 0) {
-                                    Text("Habits Done")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                    Text("\(completedHabitsCount) of \(activeHabits.count)")
-                                        .font(.system(.subheadline, design: .default))
-                                        .fontWeight(.bold)
-                                }
-                            }
-                            
-                            HStack(spacing: 8) {
-                                ZStack {
-                                    Circle().fill(SelfUpStyle.primaryIndigo.opacity(0.18)).frame(width: 30, height: 30)
-                                    Image(systemName: "checklist")
-                                        .foregroundStyle(SelfUpStyle.primaryIndigo)
-                                        .font(.subheadline)
-                                }
-                                VStack(alignment: .leading, spacing: 0) {
-                                    Text("Focus Tasks")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                    Text("\(openTasksToday.count) Pending")
-                                        .font(.system(.subheadline, design: .default))
-                                        .fontWeight(.bold)
-                                }
-                            }
-                            
-                            HStack(spacing: 8) {
-                                ZStack {
-                                    Circle().fill(SelfUpStyle.hyperMagenta.opacity(0.18)).frame(width: 30, height: 30)
-                                    Image(systemName: "creditcard.fill")
-                                        .foregroundStyle(SelfUpStyle.hyperMagenta)
-                                        .font(.subheadline)
-                                }
-                                VStack(alignment: .leading, spacing: 0) {
-                                    Text("Today Net")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                    Text("\(moneySummaryToday.net >= 0 ? "+" : "")\(currencySymbol) \(moneySummaryToday.net, format: .number)")
-                                        .font(.system(.subheadline, design: .default))
-                                        .fontWeight(.bold)
-                                        .foregroundStyle(moneySummaryToday.net >= 0 ? SelfUpStyle.cyberLime : SelfUpStyle.hyperMagenta)
-                                }
-                            }
-                        }
-                        
-                        Spacer()
                     }
-                    .bentoCard(cornerRadius: 16)
+                    .bentoCard(cornerRadius: 18)
                     .padding(.horizontal)
                     .onAppear {
                         animateScore = true
@@ -253,7 +141,7 @@ struct TodayView: View {
                             }
                             Spacer()
                             Image(systemName: "chart.line.uptrend.xyaxis")
-                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                .foregroundStyle(SelfUpStyle.brand)
                         }
                         
                         Chart(activityData) { day in
@@ -262,7 +150,7 @@ struct TodayView: View {
                                 y: .value("Life Score", day.score)
                             )
                             .interpolationMethod(.catmullRom)
-                            .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            .foregroundStyle(SelfUpStyle.brand)
                             .lineStyle(StrokeStyle(lineWidth: 3.5))
                             
                             AreaMark(
@@ -272,7 +160,7 @@ struct TodayView: View {
                             .interpolationMethod(.catmullRom)
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [SelfUpStyle.primaryIndigo.opacity(0.3), SelfUpStyle.primaryIndigo.opacity(0.0)],
+                                    colors: [SelfUpStyle.brand.opacity(0.3), SelfUpStyle.brand.opacity(0.0)],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
@@ -280,8 +168,10 @@ struct TodayView: View {
                         }
                         .frame(height: 135)
                         .chartYScale(domain: 0...100)
+                        .accessibilityLabel("Seven-day Life Score")
+                        .accessibilityValue(activityAccessibilitySummary)
                     }
-                    .premiumCard(cornerRadius: 16)
+                    .premiumCard(cornerRadius: 18)
                     .padding(.horizontal)
                 }
                 .padding(.vertical)
@@ -293,11 +183,194 @@ struct TodayView: View {
             }
         }
     }
+
+    @ViewBuilder
+    private var header: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top) {
+                    SelfUpLogoView(style: .compactHeader)
+                    Spacer()
+                    settingsButton
+                }
+                greeting
+            }
+        } else {
+            HStack {
+                VStack(alignment: .leading, spacing: 6) {
+                    SelfUpLogoView(style: .compactHeader)
+                    greeting
+                }
+                Spacer()
+                settingsButton
+            }
+        }
+    }
+
+    private var greeting: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(profileName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                 ? "Welcome back"
+                 : "Hey, \(profileName.trimmingCharacters(in: .whitespacesAndNewlines))")
+                .font(.title3.bold())
+
+            Text(Date().formatted(date: .complete, time: .omitted).uppercased())
+                .font(.caption2)
+                .fontWeight(.bold)
+                .foregroundStyle(.secondary)
+                .tracking(dynamicTypeSize.isAccessibilitySize ? 0 : 1.2)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var settingsButton: some View {
+        Button {
+            showingSettings = true
+        } label: {
+            Image(systemName: "gearshape.fill")
+                .font(.title3)
+                .foregroundStyle(.secondary)
+                .padding(10)
+                .background(Circle().fill(Color(.tertiarySystemFill)))
+                .frame(minWidth: SelfUpStyle.minimumControlSize, minHeight: SelfUpStyle.minimumControlSize)
+        }
+        .accessibilityLabel("Open settings")
+    }
+
+    @ViewBuilder
+    private func levelHeader(_ progress: ProgressSnapshot) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top, spacing: 12) {
+                    levelIcon
+                    levelIdentity(progress)
+                }
+                nextLevelBadge(progress)
+            }
+        } else {
+            HStack(spacing: 12) {
+                levelIcon
+                levelIdentity(progress)
+                Spacer(minLength: 8)
+                nextLevelBadge(progress)
+            }
+        }
+    }
+
+    private var levelIcon: some View {
+        ZStack {
+            Circle()
+                .fill(SelfUpStyle.goldGradient)
+                .frame(width: 38, height: 38)
+            Image(systemName: "crown.fill")
+                .foregroundStyle(.white)
+                .font(.subheadline)
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func levelIdentity(_ progress: ProgressSnapshot) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("Level \(progress.level)")
+                .font(.headline.bold())
+            Text("\(progress.levelTitle) • \(progress.xp) XP total")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func nextLevelBadge(_ progress: ProgressSnapshot) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "bolt.fill")
+                .foregroundStyle(.white)
+            Text("\(progress.xpToNextLevel) XP to next level")
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .font(.caption.bold())
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(RoundedRectangle(cornerRadius: 12).fill(SelfUpStyle.brandFill))
+        .foregroundStyle(.white)
+    }
+
+    private func lifeScoreGauge(_ progress: ProgressSnapshot) -> some View {
+        ZStack {
+            Circle()
+                .stroke(Color.primary.opacity(0.08), lineWidth: 14)
+                .frame(width: 104, height: 104)
+
+            Circle()
+                .trim(from: 0, to: animateScore ? CGFloat(progress.lifeScore) / 100.0 : 0)
+                .stroke(SelfUpStyle.lifeScoreGradient, style: StrokeStyle(lineWidth: 14, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+                .frame(width: 104, height: 104)
+                .animation(reduceMotion ? nil : .spring(response: 1.2, dampingFraction: 0.8), value: animateScore)
+
+            VStack(spacing: 0) {
+                Text("\(progress.lifeScore)")
+                    .font(.title.bold())
+                Text("SCORE")
+                    .font(.caption2.bold())
+                    .foregroundStyle(SelfUpStyle.success)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Life Score")
+        .accessibilityValue("\(progress.lifeScore) out of 100")
+    }
+
+    private var summaryMetrics: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            summaryMetric(
+                title: "Habits Done",
+                value: "\(completedHabitsCount) of \(activeHabits.count)",
+                symbol: "checkmark.circle.fill",
+                color: SelfUpStyle.success
+            )
+            summaryMetric(
+                title: "Focus Tasks",
+                value: "\(openTasksToday.count) Pending",
+                symbol: "checklist",
+                color: SelfUpStyle.brand
+            )
+            summaryMetric(
+                title: "Today Net",
+                value: "\(moneySummaryToday.net >= 0 ? "+" : "")\(currencySymbol) \(NSDecimalNumber(decimal: moneySummaryToday.net).stringValue)",
+                symbol: "creditcard.fill",
+                color: moneySummaryToday.net >= 0 ? SelfUpStyle.success : SelfUpStyle.danger
+            )
+        }
+    }
+
+    private func summaryMetric(title: String, value: String, symbol: String, color: Color) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            ZStack {
+                Circle().fill(color.opacity(0.18)).frame(width: 30, height: 30)
+                Image(systemName: symbol)
+                    .foregroundStyle(color)
+                    .font(.subheadline)
+            }
+            .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(value)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(title == "Today Net" ? color : Color.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
 }
 
 struct HabitQuickCell: View {
     let habit: Habit
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let trackingService = TrackingService()
     @State private var celebrationToken = 0
     
@@ -306,23 +379,19 @@ struct HabitQuickCell: View {
     }
     
     private var tintColor: Color {
-        switch habit.tintName {
-        case "green": return .emerald
-        case "orange": return .orange
-        case "purple": return .purple
-        case "red": return .coral
-        case "teal": return .teal
-        case "indigo": return SelfUpStyle.primaryIndigo
-        default: return SelfUpStyle.primaryIndigo
-        }
+        SelfUpStyle.habitTint(named: habit.tintName)
+    }
+
+    private var tintFillColor: Color {
+        SelfUpStyle.habitFill(named: habit.tintName)
     }
     
     var body: some View {
         Button {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+            withAnimation(reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.6)) {
                 let didComplete = (try? trackingService.toggleHabit(habit, on: Date(), context: modelContext)) == true
                 if didComplete {
-                    celebrationToken += 1
+                    if !reduceMotion { celebrationToken += 1 }
                     Haptics.success()
                 } else {
                     Haptics.light()
@@ -340,10 +409,11 @@ struct HabitQuickCell: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
+            .frame(minHeight: SelfUpStyle.minimumControlSize)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(isCompletedToday ? tintColor : Color(.secondarySystemGroupedBackground))
-                    .shadow(color: isCompletedToday ? tintColor.opacity(0.3) : Color.black.opacity(0.02), radius: 6, x: 0, y: 3)
+                    .fill(isCompletedToday ? tintFillColor : Color(.secondarySystemGroupedBackground))
+                    .shadow(color: isCompletedToday ? tintFillColor.opacity(0.24) : Color.black.opacity(0.02), radius: 6, x: 0, y: 3)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
@@ -351,9 +421,11 @@ struct HabitQuickCell: View {
             )
         }
         .pressableScale(scale: 0.94)
+        .accessibilityLabel(habit.title)
+        .accessibilityValue(isCompletedToday ? "Completed today" : "Not completed today, worth \(habit.xpReward) XP")
         .overlay {
-            if celebrationToken > 0 {
-                CompletionMotionView(color: tintColor, compact: true)
+            if celebrationToken > 0 && !reduceMotion {
+                CompletionMotionView(color: tintFillColor, compact: true)
                     .id(celebrationToken)
             }
         }

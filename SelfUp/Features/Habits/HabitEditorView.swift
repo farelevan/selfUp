@@ -1,6 +1,12 @@
 import SwiftUI
 import SwiftData
 
+private struct WeekdayOption: Identifiable {
+    let id: Int
+    let shortLabel: String
+    let accessibilityLabel: String
+}
+
 struct HabitEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -17,6 +23,21 @@ struct HabitEditorView: View {
     
     let symbols = ["checkmark.circle.fill", "flame.fill", "heart.fill", "star.fill", "book.fill", "drop.fill", "bolt.fill"]
     let tints = ["blue", "green", "orange", "purple", "red", "teal", "indigo"]
+
+    private let weekdays = [
+        WeekdayOption(id: 1, shortLabel: "S", accessibilityLabel: "Sunday"),
+        WeekdayOption(id: 2, shortLabel: "M", accessibilityLabel: "Monday"),
+        WeekdayOption(id: 3, shortLabel: "T", accessibilityLabel: "Tuesday"),
+        WeekdayOption(id: 4, shortLabel: "W", accessibilityLabel: "Wednesday"),
+        WeekdayOption(id: 5, shortLabel: "T", accessibilityLabel: "Thursday"),
+        WeekdayOption(id: 6, shortLabel: "F", accessibilityLabel: "Friday"),
+        WeekdayOption(id: 7, shortLabel: "S", accessibilityLabel: "Saturday")
+    ]
+
+    private let weekdayColumns = Array(
+        repeating: GridItem(.flexible(), spacing: SelfUpStyle.Spacing.small),
+        count: 4
+    )
     
     var body: some View {
         NavigationStack {
@@ -31,7 +52,7 @@ struct HabitEditorView: View {
                 Section(header: Text("Icon")) {
                     Picker("Symbol", selection: $selectedSymbol) {
                         ForEach(symbols, id: \.self) { symbol in
-                            Label(symbol, systemImage: symbol).tag(symbol)
+                            Label(symbolDisplayName(symbol), systemImage: symbol).tag(symbol)
                         }
                     }
                     .pickerStyle(.menu)
@@ -47,19 +68,26 @@ struct HabitEditorView: View {
                 }
 
                 Section(header: Text("Schedule"), footer: Text(scheduledWeekdays == 0 ? "Every day" : "Only selected days count toward your daily score.")) {
-                    HStack {
-                        ForEach(Array(zip([1, 2, 3, 4, 5, 6, 7], ["S", "M", "T", "W", "T", "F", "S"])), id: \.0) { day, label in
+                    LazyVGrid(columns: weekdayColumns, spacing: SelfUpStyle.Spacing.small) {
+                        ForEach(weekdays) { weekday in
+                            let isSelected = scheduledWeekdays == 0 || scheduledWeekdays & (1 << weekday.id) != 0
                             Button {
-                                let bit = 1 << day
+                                let bit = 1 << weekday.id
                                 scheduledWeekdays = scheduledWeekdays & bit == 0 ? scheduledWeekdays | bit : scheduledWeekdays & ~bit
                             } label: {
-                                Text(label)
+                                Text(weekday.shortLabel)
                                     .font(.caption.bold())
-                                    .frame(width: 28, height: 28)
-                                    .foregroundStyle(scheduledWeekdays == 0 || scheduledWeekdays & (1 << day) != 0 ? .white : .primary)
-                                    .background(Circle().fill(scheduledWeekdays == 0 || scheduledWeekdays & (1 << day) != 0 ? SelfUpStyle.primaryIndigo : Color.secondary.opacity(0.16)))
+                                    .frame(maxWidth: .infinity)
+                                    .frame(minHeight: SelfUpStyle.Control.minimumTapTarget)
+                                    .foregroundStyle(isSelected ? .white : .primary)
+                                    .background(
+                                        Capsule().fill(isSelected ? SelfUpStyle.brandFill : Color.secondary.opacity(0.16))
+                                    )
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(weekday.accessibilityLabel)
+                            .accessibilityValue(isSelected ? "Selected" : "Not selected")
+                            .accessibilityAddTraits(isSelected ? .isSelected : [])
                         }
                     }
                 }
@@ -98,6 +126,19 @@ struct HabitEditorView: View {
                     }
                 }
             }
+        }
+    }
+
+    private func symbolDisplayName(_ symbol: String) -> String {
+        switch symbol {
+        case "checkmark.circle.fill": return "Checkmark"
+        case "flame.fill": return "Flame"
+        case "heart.fill": return "Heart"
+        case "star.fill": return "Star"
+        case "book.fill": return "Book"
+        case "drop.fill": return "Water drop"
+        case "bolt.fill": return "Bolt"
+        default: return "Symbol"
         }
     }
     

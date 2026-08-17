@@ -20,7 +20,7 @@ enum AppDestination: String, CaseIterable, AppEnum {
             .habits: DisplayRepresentation(title: "Habits"),
             .money: DisplayRepresentation(title: "Money"),
             .tasks: DisplayRepresentation(title: "Tasks"),
-            .rewards: DisplayRepresentation(title: "Rewards"),
+            .rewards: DisplayRepresentation(title: "Progress"),
             .insights: DisplayRepresentation(title: "Insights")
         ]
     }
@@ -31,8 +31,15 @@ final class AppRouter {
     static let shared = AppRouter()
     
     var destination: AppDestination = .today
+    var shouldPresentInsights = false
     
     func navigate(to target: AppDestination) {
-        destination = target
+        if target == .insights {
+            destination = .rewards
+            shouldPresentInsights = true
+        } else {
+            shouldPresentInsights = false
+            destination = target
+        }
     }
 }

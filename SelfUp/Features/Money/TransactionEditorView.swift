@@ -147,6 +147,16 @@ struct TransactionEditorView: View {
             }
             
             try modelContext.save()
+            if let savedTransactions = try? modelContext.fetch(FetchDescriptor<Transaction>()) {
+                Task {
+                    _ = await NotificationManager.reconcileFunBudget(
+                        transactions: savedTransactions,
+                        currencySymbol: currencySymbol,
+                        now: Date(),
+                        calendar: .autoupdatingCurrent
+                    )
+                }
+            }
             dismiss()
         } catch {
             errorMessage = error.localizedDescription

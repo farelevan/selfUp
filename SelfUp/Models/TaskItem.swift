@@ -78,6 +78,9 @@ enum TaskRecurrence: String, Codable, CaseIterable, Identifiable {
     var priority: TaskPriority
     var completedAt: Date?
     var xpReward: Int
+    // Captures the configured reward when completion occurs. Nil is retained as
+    // a backward-compatible marker for tasks saved by older app versions.
+    var xpAwarded: Int?
     // Optional storage is intentional: records created before these fields
     // existed contain nil and must remain readable during lightweight migration.
     var period: TaskPeriod?
@@ -109,7 +112,8 @@ enum TaskRecurrence: String, Codable, CaseIterable, Identifiable {
         startedAt: Date? = nil,
         recurrence: TaskRecurrence = .none,
         reminderHour: Int? = nil,
-        reminderMinute: Int? = nil
+        reminderMinute: Int? = nil,
+        xpAwarded: Int? = nil
     ) {
         self.id = UUID()
         self.title = title
@@ -117,6 +121,7 @@ enum TaskRecurrence: String, Codable, CaseIterable, Identifiable {
         self.priority = priority
         self.completedAt = completedAt
         self.xpReward = xpReward
+        self.xpAwarded = completedAt == nil ? nil : (xpAwarded ?? max(0, xpReward))
         self.period = period
         self.workflowStatus = completedAt == nil ? workflowStatus : .completed
         self.startedAt = startedAt
@@ -132,14 +137,18 @@ enum TaskRecurrence: String, Codable, CaseIterable, Identifiable {
         switch status {
         case .planned:
             completedAt = nil
+            xpAwarded = nil
             startedAt = nil
         case .inProgress:
             completedAt = nil
+            xpAwarded = nil
             startedAt = startedAt ?? date
         case .blocked:
             completedAt = nil
+            xpAwarded = nil
         case .completed:
             completedAt = completedAt ?? date
+            xpAwarded = xpAwarded ?? max(0, xpReward)
         }
     }
 

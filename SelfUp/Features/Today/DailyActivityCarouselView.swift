@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-enum ActivityCarouselPage: Int, CaseIterable, Identifiable {
+enum ActivityCarouselPage: Int, CaseIterable, Identifiable, Hashable {
     case habits = 0
     case tasks = 1
     case money = 2
@@ -19,7 +19,7 @@ enum ActivityCarouselPage: Int, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .habits: return "DAILY HABITS"
-        case .tasks: return "FOCUS GOALS"
+        case .tasks: return "TODAY'S TASKS"
         case .money: return "MONEY FLOW"
         }
     }
@@ -34,9 +34,9 @@ enum ActivityCarouselPage: Int, CaseIterable, Identifiable {
     
     var accentColor: Color {
         switch self {
-        case .habits: return SelfUpStyle.cyberLime
-        case .tasks: return SelfUpStyle.primaryIndigo
-        case .money: return SelfUpStyle.hyperMagenta
+        case .habits: return SelfUpStyle.success
+        case .tasks: return SelfUpStyle.brand
+        case .money: return SelfUpStyle.danger
         }
     }
 }
@@ -49,65 +49,20 @@ struct DailyActivityCarouselView: View {
     
     @State private var currentPage: ActivityCarouselPage = .habits
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     private let trackingService = TrackingService()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Segmented Header Bar with Tap Pills & Controls
-            HStack {
-                HStack(spacing: 6) {
-                    ForEach(ActivityCarouselPage.allCases) { page in
-                        Button {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                currentPage = page
-                                Haptics.selection()
-                            }
-                        } label: {
-                            HStack(spacing: 5) {
-                                Image(systemName: page.symbol)
-                                    .font(.system(size: 11, weight: .bold))
-                                Text(page.shortTitle)
-                                    .font(.system(size: 12, weight: .bold, design: .default))
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(currentPage == page ? page.accentColor : Color.primary.opacity(0.06))
-                            )
-                            .foregroundStyle(currentPage == page ? .white : .secondary)
-                        }
-                        .pressableScale(scale: 0.92)
-                    }
-                }
-                
-                Spacer()
-                
-                // Chevron Arrows
-                HStack(spacing: 2) {
-                    Button {
-                        switchPage(delta: -1)
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.secondary)
-                            .padding(6)
-                            .background(Circle().fill(Color.primary.opacity(0.06)))
-                    }
-                    .pressableScale(scale: 0.88)
-                    
-                    Button {
-                        switchPage(delta: 1)
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.secondary)
-                            .padding(6)
-                            .background(Circle().fill(Color.primary.opacity(0.06)))
-                    }
-                    .pressableScale(scale: 0.88)
+            Picker("Daily activity", selection: $currentPage) {
+                ForEach(ActivityCarouselPage.allCases) { page in
+                    Text(page.shortTitle).tag(page)
                 }
             }
+            .pickerStyle(.segmented)
+            .frame(minHeight: SelfUpStyle.minimumControlSize)
+            .onChange(of: currentPage) { _, _ in Haptics.selection() }
             
             // Carousel Content Container with Multi-Directional Gesture Support
             ZStack {
@@ -132,52 +87,23 @@ struct DailyActivityCarouselView: View {
                         ))
                 }
             }
-            .frame(height: 165)
+            .frame(minHeight: 165)
             .contentShape(Rectangle())
             .simultaneousGesture(
                 DragGesture(minimumDistance: 15, coordinateSpace: .local)
                     .onEnded { value in
                         let horizontalAmount = value.translation.width
-                        let verticalAmount = value.translation.height
-                        
-                        if abs(horizontalAmount) > abs(verticalAmount) {
+                        if abs(horizontalAmount) > abs(value.translation.height) {
                             if horizontalAmount < -25 {
-                                switchPage(delta: 1) // Swipe Left -> Next
+                                switchPage(delta: 1)
                             } else if horizontalAmount > 25 {
-                                switchPage(delta: -1) // Swipe Right -> Prev
-                            }
-                        } else {
-                            if verticalAmount < -25 {
-                                switchPage(delta: 1) // Swipe Up -> Next
-                            } else if verticalAmount > 25 {
-                                switchPage(delta: -1) // Swipe Down -> Prev
+                                switchPage(delta: -1)
                             }
                         }
                     }
             )
-            
-            // Footer Hint & Page Index
-            HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "hand.draw.fill")
-                        .font(.caption2)
-                    Text("Swipe left/right or up/down inside box")
-                        .font(.system(size: 10, weight: .medium, design: .default))
-                }
-                .foregroundStyle(.tertiary)
-                
-                Spacer()
-                
-                HStack(spacing: 4) {
-                    ForEach(ActivityCarouselPage.allCases) { page in
-                        Circle()
-                            .fill(currentPage == page ? page.accentColor : Color.primary.opacity(0.18))
-                            .frame(width: 5, height: 5)
-                    }
-                }
-            }
         }
-        .premiumCard(cornerRadius: 16)
+        .premiumCard(cornerRadius: 18)
         .padding(.horizontal)
     }
     
@@ -185,9 +111,8 @@ struct DailyActivityCarouselView: View {
         let count = ActivityCarouselPage.allCases.count
         let nextIndex = (currentPage.rawValue + delta + count) % count
         if let newPage = ActivityCarouselPage(rawValue: nextIndex) {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+            withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.75)) {
                 currentPage = newPage
-                Haptics.selection()
             }
         }
     }
@@ -198,7 +123,7 @@ struct DailyActivityCarouselView: View {
             if habits.isEmpty {
                 HStack(spacing: 10) {
                     Image(systemName: "sparkles")
-                        .foregroundStyle(SelfUpStyle.cyberLime)
+                        .foregroundStyle(SelfUpStyle.success)
                     Text("No habits set for today yet.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -225,7 +150,7 @@ struct DailyActivityCarouselView: View {
                 HStack(spacing: 12) {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.title2)
-                        .foregroundStyle(SelfUpStyle.cyberLime)
+                        .foregroundStyle(SelfUpStyle.success)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("All Goals Completed!")
                             .font(.subheadline)
@@ -241,18 +166,24 @@ struct DailyActivityCarouselView: View {
                     ForEach(openTasks.prefix(3)) { task in
                         HStack(spacing: 10) {
                             Capsule()
-                                .fill(task.priority == .high ? SelfUpStyle.hyperMagenta : (task.priority == .medium ? Color.orange : SelfUpStyle.cyberCyan))
+                                .fill(task.priority == .high ? SelfUpStyle.danger : (task.priority == .medium ? SelfUpStyle.warning : SelfUpStyle.info))
                                 .frame(width: 4, height: 22)
+                                .accessibilityHidden(true)
                             
-                            Text(task.title)
-                                .font(.system(.subheadline, design: .default))
-                                .fontWeight(.bold)
-                                .lineLimit(1)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(task.title)
+                                    .font(.system(.subheadline, design: .default))
+                                    .fontWeight(.bold)
+                                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
+                                Text("\(task.priority.rawValue.capitalized) priority")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
                             
                             Spacer()
                             
                             Button {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
+                                withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.6)) {
                                     _ = try? trackingService.toggleTask(task, on: Date(), context: modelContext)
                                     Haptics.success()
                                 }
@@ -260,8 +191,10 @@ struct DailyActivityCarouselView: View {
                                 Image(systemName: "circle")
                                     .font(.system(size: 16, weight: .bold))
                                     .foregroundStyle(.secondary)
+                                    .frame(width: SelfUpStyle.minimumControlSize, height: SelfUpStyle.minimumControlSize)
                             }
                             .pressableScale(scale: 0.88)
+                            .accessibilityLabel("Complete \(task.title)")
                         }
                         .padding(10)
                         .background(RoundedRectangle(cornerRadius: 14).fill(Color.primary.opacity(0.04)))
@@ -274,11 +207,24 @@ struct DailyActivityCarouselView: View {
     
     // MARK: - Money Carousel Page
     private var moneyView: some View {
-        HStack(spacing: 16) {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: SelfUpStyle.spacingLG) {
+                incomeSummary
+                expenseSummary
+            }
+            VStack(spacing: SelfUpStyle.spacingSM) {
+                incomeSummary
+                expenseSummary
+            }
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    private var incomeSummary: some View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.down.right.circle.fill")
-                        .foregroundStyle(SelfUpStyle.cyberLime)
+                        .foregroundStyle(SelfUpStyle.success)
                         .font(.caption)
                     Text("Income")
                         .font(.caption2)
@@ -287,16 +233,19 @@ struct DailyActivityCarouselView: View {
                 Text("\(currencySymbol) \(moneySummary.income, format: .number)")
                     .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
-                    .foregroundStyle(SelfUpStyle.cyberLime)
+                    .foregroundStyle(SelfUpStyle.success)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
-            .background(RoundedRectangle(cornerRadius: 18).fill(SelfUpStyle.cyberLime.opacity(0.1)))
-            
+            .background(RoundedRectangle(cornerRadius: 18).fill(SelfUpStyle.success.opacity(0.1)))
+            .accessibilityElement(children: .combine)
+    }
+
+    private var expenseSummary: some View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.up.right.circle.fill")
-                        .foregroundStyle(SelfUpStyle.hyperMagenta)
+                        .foregroundStyle(SelfUpStyle.danger)
                         .font(.caption)
                     Text("Expenses")
                         .font(.caption2)
@@ -305,12 +254,11 @@ struct DailyActivityCarouselView: View {
                 Text("\(currencySymbol) \(moneySummary.expenses, format: .number)")
                     .font(.system(.headline, design: .default))
                     .fontWeight(.bold)
-                    .foregroundStyle(SelfUpStyle.hyperMagenta)
+                    .foregroundStyle(SelfUpStyle.danger)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)
-            .background(RoundedRectangle(cornerRadius: 18).fill(SelfUpStyle.hyperMagenta.opacity(0.1)))
-        }
-        .frame(maxHeight: .infinity)
+            .background(RoundedRectangle(cornerRadius: 18).fill(SelfUpStyle.danger.opacity(0.1)))
+            .accessibilityElement(children: .combine)
     }
 }

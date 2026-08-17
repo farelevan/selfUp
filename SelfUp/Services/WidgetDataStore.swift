@@ -31,14 +31,14 @@ final class WidgetDataStore {
            let snapshot = try? JSONDecoder().decode(WidgetSnapshot.self, from: data) {
             return snapshot
         }
-        // Fallback default sample entry
+        // Never present demo metrics as if they were the user's live data.
         return WidgetSnapshot(
-            vibeScore: 85,
+            vibeScore: 0,
             level: 1,
-            xp: 250,
-            completedHabits: 3,
-            totalHabits: 4,
-            pendingTasks: 2,
+            xp: 0,
+            completedHabits: 0,
+            totalHabits: 0,
+            pendingTasks: 0,
             lastUpdated: Date()
         )
     }

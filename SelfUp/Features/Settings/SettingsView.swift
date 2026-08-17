@@ -3,10 +3,12 @@ import SwiftData
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query private var habits: [Habit]
     @Query private var tasks: [TaskItem]
     @Query private var transactions: [Transaction]
+    @Query private var rewards: [Reward]
     
     @State private var selectedCurrency = "Rp"
     @State private var showingExport = false
@@ -17,6 +19,7 @@ struct SettingsView: View {
     @State private var pendingPayload: BackupPayload? = nil
     @State private var showingSuccessAlert = false
     @State private var successAlertMessage = ""
+    @AppStorage("profile_name") private var profileName = ""
     
     let currencies = [
         ("IDR (Rp)", "Rp"),
@@ -29,6 +32,12 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section(header: Text("Profile")) {
+                    TextField("Your name", text: $profileName)
+                        .textContentType(.name)
+                        .accessibilityLabel("Profile name")
+                }
+
                 Section(header: Text("Configuration")) {
                     Picker("Currency", selection: $selectedCurrency) {
                         ForEach(currencies, id: \.1) { label, code in
@@ -44,10 +53,10 @@ struct SettingsView: View {
                     Button("Seed Demo Dataset") {
                         seedDemoData()
                     }
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(SelfUpStyle.brand)
                 }
                 
-                Section(header: Text("Data Backup & Restore"), footer: Text("Importing data will replace all current habits, tasks, and transactions.")) {
+                Section(header: Text("Data Backup & Restore"), footer: Text("Import replaces habits, tasks, and transactions. Rewards are replaced when the backup includes them.")) {
                     Button {
                         prepareExport()
                     } label: {
@@ -59,10 +68,17 @@ struct SettingsView: View {
                     } label: {
                         Label("Import Data from JSON", systemImage: "square.and.arrow.down")
                     }
-                    .foregroundStyle(.red)
+                    .foregroundStyle(SelfUpStyle.danger)
                 }
             }
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                        .fontWeight(.semibold)
+                }
+            }
             .onAppear {
                 selectedCurrency = UserDefaults.standard.string(forKey: "selected_currency") ?? "Rp"
             }
@@ -119,6 +135,9 @@ struct SettingsView: View {
                 isArchived: h.isArchived,
                 createdAt: h.createdAt,
                 completions: h.completions.map { $0.date },
+                completionAwards: h.completions.map {
+                    HabitCompletionBackup(id: $0.id, date: $0.date, xpAwarded: $0.xpAwarded)
+                },
                 scheduledWeekdays: h.scheduledWeekdays,
                 reminderHour: h.reminderHour,
                 reminderMinute: h.reminderMinute
@@ -133,6 +152,7 @@ struct SettingsView: View {
                 priority: t.priority.rawValue,
                 completedAt: t.completedAt,
                 xpReward: t.xpReward,
+                xpAwarded: t.xpAwarded,
                 period: t.effectivePeriod.rawValue,
                 workflowStatus: t.effectiveStatus.rawValue,
                 startedAt: t.startedAt,
@@ -152,8 +172,17 @@ struct SettingsView: View {
                 date: tx.date
             )
         }
+
+        let rewardBackups = rewards.map {
+            RewardBackup(id: $0.id, title: $0.title, xpCost: $0.xpCost, redeemedAt: $0.redeemedAt)
+        }
         
-        let payload = BackupPayload(habits: habitBackups, transactions: txBackups, tasks: taskBackups)
+        let payload = BackupPayload(
+            habits: habitBackups,
+            transactions: txBackups,
+            tasks: taskBackups,
+            rewards: rewardBackups
+        )
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
@@ -191,6 +220,9 @@ struct SettingsView: View {
         for h in habits { modelContext.delete(h) }
         for t in tasks { modelContext.delete(t) }
         for tx in transactions { modelContext.delete(tx) }
+        if payload.rewards != nil {
+            for reward in rewards { modelContext.delete(reward) }
+        }
         
         for hb in payload.habits {
             let h = Habit(
@@ -207,8 +239,16 @@ struct SettingsView: View {
             h.id = hb.id
             modelContext.insert(h)
             
-            for date in hb.completions {
-                let comp = HabitCompletion(date: date, habit: h)
+            let completionBackups = hb.completionAwards ?? hb.completions.map {
+                HabitCompletionBackup(id: UUID(), date: $0, xpAwarded: nil)
+            }
+            for completionBackup in completionBackups {
+                let comp = HabitCompletion(
+                    id: completionBackup.id,
+                    date: completionBackup.date,
+                    habit: h,
+                    xpAwarded: completionBackup.xpAwarded
+                )
                 modelContext.insert(comp)
                 h.completions.append(comp)
             }
@@ -227,7 +267,8 @@ struct SettingsView: View {
                 startedAt: tb.startedAt,
                 recurrence: tb.recurrence.flatMap(TaskRecurrence.init(rawValue:)) ?? .none,
                 reminderHour: tb.reminderHour,
-                reminderMinute: tb.reminderMinute
+                reminderMinute: tb.reminderMinute,
+                xpAwarded: tb.xpAwarded
             )
             t.id = tb.id
             modelContext.insert(t)
@@ -244,6 +285,18 @@ struct SettingsView: View {
             )
             tx.id = txb.id
             modelContext.insert(tx)
+        }
+
+        if let rewardBackups = payload.rewards {
+            for rewardBackup in rewardBackups {
+                let reward = Reward(
+                    title: rewardBackup.title,
+                    xpCost: rewardBackup.xpCost,
+                    redeemedAt: rewardBackup.redeemedAt
+                )
+                reward.id = rewardBackup.id
+                modelContext.insert(reward)
+            }
         }
         
         do {

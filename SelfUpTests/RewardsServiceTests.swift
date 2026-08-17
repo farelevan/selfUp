@@ -2,37 +2,83 @@ import XCTest
 @testable import SelfUp
 
 final class RewardsServiceTests: XCTestCase {
+    private let fixedDate = Date(timeIntervalSince1970: 1_800_000_000)
+
     func testXpBalanceDeductionsUponRedemption() {
-        // Arrange
         let habit = Habit(title: "Drink Water", xpReward: 15)
-        let completion = HabitCompletion(date: Date())
-        completion.habit = habit
+        let completion = HabitCompletion(date: fixedDate, habit: habit, xpAwarded: 15)
         habit.completions = [completion]
-        
-        let habits = [habit]
-        
+
         let tasks = [
-            TaskItem(title: "Do Tax", priority: .high, completedAt: Date(), xpReward: 20)
+            TaskItem(
+                title: "Do Tax",
+                priority: .high,
+                completedAt: fixedDate,
+                xpReward: 20,
+                xpAwarded: 20
+            )
         ]
-        let transactions: [Transaction] = []
-        
         let rewards = [
-            Reward(title: "Play Games", xpCost: 30, redeemedAt: Date())
+            Reward(title: "Play Games", xpCost: 30, redeemedAt: fixedDate)
         ]
-        
-        // Act
+
         let snapshot = ProgressService.snapshot(
-            habits: habits,
+            habits: [habit],
             tasks: tasks,
-            transactions: transactions,
+            transactions: [],
             rewards: rewards,
-            on: Date()
+            on: fixedDate,
+            calendar: fixedCalendar
         )
-        
-        // Assert
-        XCTAssertEqual(snapshot.xp, 35, "Lifetime XP should be 35")
-        XCTAssertEqual(snapshot.level, 1, "Level should be 1 based on lifetime XP")
-        XCTAssertEqual(snapshot.spentXP, 30, "Spent XP should be 30")
-        XCTAssertEqual(snapshot.currentXP, 5, "Available balance should be 5")
+
+        XCTAssertEqual(snapshot.xp, 35)
+        XCTAssertEqual(snapshot.level, 1)
+        XCTAssertEqual(snapshot.spentXP, 30)
+        XCTAssertEqual(snapshot.currentXP, 5)
+    }
+
+    func testRedeemRejectsInsufficientBalanceWithoutMutation() {
+        let reward = Reward(title: "Movie", xpCost: 50)
+
+        XCTAssertThrowsError(
+            try RewardsService.redeem(reward, availableXP: 40, on: fixedDate)
+        ) { error in
+            XCTAssertEqual(
+                error as? RewardRedemptionError,
+                .insufficientXP(required: 50, available: 40)
+            )
+        }
+        XCTAssertNil(reward.redeemedAt)
+    }
+
+    func testRedeemRejectsAnAlreadyRedeemedReward() {
+        let originalDate = Date(timeIntervalSince1970: 1_700_000_000)
+        let reward = Reward(title: "Movie", xpCost: 50, redeemedAt: originalDate)
+
+        XCTAssertThrowsError(
+            try RewardsService.redeem(reward, availableXP: 500, on: fixedDate)
+        ) { error in
+            XCTAssertEqual(error as? RewardRedemptionError, .alreadyRedeemed)
+        }
+        XCTAssertEqual(reward.redeemedAt, originalDate)
+    }
+
+    func testRedeemStoresTheProvidedDateWhenAffordable() throws {
+        let reward = Reward(title: "Movie", xpCost: 50)
+
+        let redeemedAt = try RewardsService.redeem(
+            reward,
+            availableXP: 50,
+            on: fixedDate
+        )
+
+        XCTAssertEqual(redeemedAt, fixedDate)
+        XCTAssertEqual(reward.redeemedAt, fixedDate)
+    }
+
+    private var fixedCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        return calendar
     }
 }

@@ -9,6 +9,7 @@ struct HistoricalScore: Identifiable {
 }
 
 struct InsightsView: View {
+    @Environment(\.dismiss) private var dismiss
     @Query private var habits: [Habit]
     @Query private var tasks: [TaskItem]
     @Query private var transactions: [Transaction]
@@ -49,6 +50,12 @@ struct InsightsView: View {
         return (average(daysAgo: 0..<7), average(daysAgo: 7..<14))
     }
 
+    private var historyAccessibilitySummary: String {
+        guard let latest = lifeScoreHistory.last else { return "No Life Score data" }
+        let scores = lifeScoreHistory.map(\.score)
+        return "Latest score \(latest.score) out of 100; \(selectedRange)-day range \(scores.min() ?? 0) to \(scores.max() ?? 0)."
+    }
+
     private var weeklyRecommendations: [String] {
         let calendar = Calendar.current
         let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: Date()) ?? Date()
@@ -79,6 +86,8 @@ struct InsightsView: View {
                         Text("30 Days").tag(30)
                     }
                     .pickerStyle(.segmented)
+                    .frame(minHeight: SelfUpStyle.minimumControlSize)
+                    .contentShape(Rectangle())
                     .padding(.horizontal)
 
                     VStack(alignment: .leading, spacing: 14) {
@@ -94,10 +103,10 @@ struct InsightsView: View {
                             VStack(alignment: .trailing) {
                                 Text("\(weeklyScores.current)")
                                     .font(.title.bold())
-                                    .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                    .foregroundStyle(SelfUpStyle.brand)
                                 Text(weeklyScores.current >= weeklyScores.previous ? "↑ from last week" : "↓ from last week")
                                     .font(.caption2.bold())
-                                    .foregroundStyle(weeklyScores.current >= weeklyScores.previous ? Color.emerald : Color.orange)
+                                    .foregroundStyle(weeklyScores.current >= weeklyScores.previous ? SelfUpStyle.success : SelfUpStyle.warning)
                             }
                         }
                         Divider()
@@ -107,7 +116,7 @@ struct InsightsView: View {
                                     .font(.caption.bold())
                                     .foregroundStyle(.white)
                                     .frame(width: 22, height: 22)
-                                    .background(Circle().fill(SelfUpStyle.primaryIndigo))
+                                    .background(Circle().fill(SelfUpStyle.brandFill))
                                 Text(recommendation)
                                     .font(.subheadline)
                             }
@@ -130,7 +139,7 @@ struct InsightsView: View {
                             Spacer()
                             Image(systemName: "chart.xyaxis.line")
                                 .font(.title3)
-                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                .foregroundStyle(SelfUpStyle.brand)
                         }
                         
                         Chart(lifeScoreHistory) { day in
@@ -138,7 +147,7 @@ struct InsightsView: View {
                                 x: .value("Date", day.date, unit: .day),
                                 y: .value("Life Score", day.score)
                             )
-                            .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            .foregroundStyle(SelfUpStyle.brand)
                             .lineStyle(StrokeStyle(lineWidth: 3))
                             .interpolationMethod(.catmullRom)
                             
@@ -149,7 +158,7 @@ struct InsightsView: View {
                             .interpolationMethod(.catmullRom)
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [SelfUpStyle.primaryIndigo.opacity(0.25), SelfUpStyle.primaryIndigo.opacity(0.0)],
+                                    colors: [SelfUpStyle.brand.opacity(0.25), SelfUpStyle.brand.opacity(0.0)],
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
@@ -157,8 +166,10 @@ struct InsightsView: View {
                         }
                         .frame(height: 160)
                         .chartYScale(domain: 0...100)
+                        .accessibilityLabel("Life Score history")
+                        .accessibilityValue(historyAccessibilitySummary)
                     }
-                    .premiumCard(cornerRadius: 16)
+                    .premiumCard(cornerRadius: 18)
                     .padding(.horizontal)
                     
                     // Habit Consistency Card
@@ -169,7 +180,7 @@ struct InsightsView: View {
                                 .fontWeight(.bold)
                             Spacer()
                             Image(systemName: "flame.fill")
-                                .foregroundStyle(.orange)
+                                .foregroundStyle(SelfUpStyle.warning)
                         }
                         
                         if activeHabits.isEmpty {
@@ -183,11 +194,11 @@ struct InsightsView: View {
                                     HStack(spacing: 12) {
                                         ZStack {
                                             Circle()
-                                                .fill(SelfUpStyle.primaryIndigo.opacity(0.12))
+                                                .fill(SelfUpStyle.brand.opacity(0.12))
                                                 .frame(width: 36, height: 36)
                                             Image(systemName: habit.symbol)
                                                 .font(.subheadline)
-                                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                                .foregroundStyle(SelfUpStyle.brand)
                                         }
                                         
                                         Text(habit.title)
@@ -199,21 +210,21 @@ struct InsightsView: View {
                                         HStack(spacing: 4) {
                                             Image(systemName: "flame.fill")
                                                 .font(.caption2)
-                                                .foregroundStyle(.orange)
+                                                .foregroundStyle(SelfUpStyle.warning)
                                             Text("\(streak)d streak")
                                                 .font(.caption)
                                                 .fontWeight(.bold)
                                         }
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 4)
-                                        .background(Capsule().fill(Color.orange.opacity(0.12)))
-                                        .foregroundStyle(.orange)
+                                        .background(Capsule().fill(SelfUpStyle.warning.opacity(0.12)))
+                                        .foregroundStyle(SelfUpStyle.warning)
                                     }
                                 }
                             }
                         }
                     }
-                    .premiumCard(cornerRadius: 20)
+                    .premiumCard(cornerRadius: 18)
                     .padding(.horizontal)
                     
                     // Task Completion Metrics
@@ -225,13 +236,13 @@ struct InsightsView: View {
                         HStack(spacing: 16) {
                             VStack(alignment: .leading, spacing: 6) {
                                 HStack(spacing: 6) {
-                                    Circle().fill(Color.emerald).frame(width: 8, height: 8)
+                                    Circle().fill(SelfUpStyle.success).frame(width: 8, height: 8)
                                     Text("Completed: \(completedTasksCount)")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                 }
                                 HStack(spacing: 6) {
-                                    Circle().fill(Color.orange).frame(width: 8, height: 8)
+                                    Circle().fill(SelfUpStyle.warning).frame(width: 8, height: 8)
                                     Text("Pending: \(pendingTasksCount)")
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
@@ -243,7 +254,7 @@ struct InsightsView: View {
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text("\(taskCompletionRate, format: .number.precision(.fractionLength(0...1)))%")
                                     .font(.system(size: 30, weight: .bold, design: .default))
-                                    .foregroundStyle(Color.emerald)
+                                    .foregroundStyle(SelfUpStyle.success)
                                 Text("Completion Rate")
                                     .font(.caption2)
                                     .fontWeight(.bold)
@@ -251,7 +262,7 @@ struct InsightsView: View {
                             }
                         }
                     }
-                    .premiumCard(cornerRadius: 20)
+                    .premiumCard(cornerRadius: 18)
                     .padding(.horizontal)
                     
                     if !transactions.isEmpty {
@@ -263,13 +274,19 @@ struct InsightsView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationTitle("Insights")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Done") { dismiss() }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingSettings = true
                     } label: {
                         Image(systemName: "gearshape")
+                            .frame(width: SelfUpStyle.minimumControlSize, height: SelfUpStyle.minimumControlSize)
                     }
+                    .accessibilityLabel("Settings")
                 }
             }
             .sheet(isPresented: $showingSettings) {

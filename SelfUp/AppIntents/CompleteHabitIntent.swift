@@ -39,7 +39,7 @@ struct HabitEntityQuery: EntityQuery {
     
     @MainActor
     private func getContext() throws -> ModelContext {
-        let schema = Schema([Habit.self, HabitCompletion.self, Transaction.self, TaskItem.self])
+        let schema = Schema([Habit.self, HabitCompletion.self, Transaction.self, TaskItem.self, Reward.self, SavingGoal.self])
         let container = try ModelContainer(for: schema)
         return container.mainContext
     }
@@ -52,7 +52,7 @@ struct CompleteHabitIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult {
-        let schema = Schema([Habit.self, HabitCompletion.self, Transaction.self, TaskItem.self])
+        let schema = Schema([Habit.self, HabitCompletion.self, Transaction.self, TaskItem.self, Reward.self, SavingGoal.self])
         let container = try ModelContainer(for: schema)
         let context = container.mainContext
         

@@ -1,8 +1,11 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct MoneyView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Query(sort: \Transaction.date, order: .reverse) private var transactions: [Transaction]
     @Query(sort: \SavingGoal.createdAt) private var savingGoals: [SavingGoal]
     
@@ -12,6 +15,10 @@ struct MoneyView: View {
     @State private var showingGoalEditor = false
     @State private var goalToEdit: SavingGoal? = nil
     @State private var goalToFund: SavingGoal? = nil
+    @State private var showingFunBudgetEditor = false
+    @State private var funBudgetNow = Date()
+    @State private var funBudgetNotificationMessage: String? = nil
+    @State private var funBudgetPermissionDenied = false
     
     private var currencySymbol: String {
         UserDefaults.standard.string(forKey: "selected_currency") ?? "Rp"
@@ -19,9 +26,8 @@ struct MoneyView: View {
     
     private var currentMonthTransactions: [Transaction] {
         let calendar = Calendar.current
-        return transactions.filter {
-            calendar.isDate($0.date, equalTo: Date(), toGranularity: .month)
-        }
+        guard let interval = calendar.dateInterval(of: .month, for: funBudgetNow) else { return [] }
+        return transactions.filter { interval.contains($0.date) && $0.date <= funBudgetNow }
     }
     
     private var summary: MoneySummary {
@@ -31,6 +37,86 @@ struct MoneyView: View {
     private var expenseRatio: Double {
         if summary.income == 0 { return summary.expenses > 0 ? 1.0 : 0.0 }
         return min(1.0, Double(truncating: (summary.expenses / summary.income) as NSDecimalNumber))
+    }
+
+    private var funBudgetStore: FunBudgetStore { FunBudgetStore() }
+
+    private var funBudgetSnapshot: FunBudgetSnapshot {
+        FunBudgetService.snapshot(
+            for: transactions,
+            limit: funBudgetStore.limit,
+            now: funBudgetNow,
+            calendar: .autoupdatingCurrent
+        )
+    }
+
+    private var funBudgetProgress: Double {
+        min(1, max(0, Double(truncating: funBudgetSnapshot.progress as NSDecimalNumber)))
+    }
+
+    private var funBudgetUsagePercentage: Double {
+        max(0, Double(truncating: funBudgetSnapshot.progress as NSDecimalNumber) * 100)
+    }
+
+    private var funBudgetMonthLabel: String {
+        funBudgetNow.formatted(.dateTime.month(.wide))
+    }
+
+    private var funBudgetDayContext: String {
+        let calendar = Calendar.autoupdatingCurrent
+        let day = calendar.component(.day, from: funBudgetNow)
+        let daysInMonth = calendar.range(of: .day, in: .month, for: funBudgetNow)?.count ?? day
+        let daysLeft = max(0, daysInMonth - day)
+        return "Day \(day) of \(daysInMonth) • \(daysLeft) day\(daysLeft == 1 ? "" : "s") left"
+    }
+
+    private var funBudgetAttentionColor: Color {
+        switch funBudgetSnapshot.attention {
+        case .unconfigured: SelfUpStyle.brand
+        case .onTrack: SelfUpStyle.success
+        case .nearlyDepleted: SelfUpStyle.warning
+        case .depleted: SelfUpStyle.danger
+        }
+    }
+
+    private var funBudgetAttentionIcon: String {
+        switch funBudgetSnapshot.attention {
+        case .unconfigured: "plus.circle.fill"
+        case .onTrack: "checkmark.circle.fill"
+        case .nearlyDepleted: "exclamationmark.triangle.fill"
+        case .depleted: "exclamationmark.octagon.fill"
+        }
+    }
+
+    private var funBudgetAttentionText: String {
+        switch funBudgetSnapshot.attention {
+        case .unconfigured:
+            "Set a monthly limit to track Entertainment spending."
+        case .onTrack:
+            "On track"
+        case .nearlyDepleted:
+            "Nearly depleted — \(formattedFunBudgetAmount(funBudgetSnapshot.remaining)) left"
+        case .depleted where funBudgetSnapshot.overage > 0:
+            "Over budget by \(formattedFunBudgetAmount(funBudgetSnapshot.overage))"
+        case .depleted:
+            "Budget depleted"
+        }
+    }
+
+    private var funBudgetTransactionSignature: String {
+        transactions.map { transaction in
+            [
+                transaction.id.uuidString,
+                NSDecimalNumber(decimal: transaction.amount).stringValue,
+                transaction.type.rawValue,
+                transaction.category,
+                String(transaction.date.timeIntervalSinceReferenceDate)
+            ].joined(separator: "|")
+        }.joined(separator: ";")
+    }
+
+    private func formattedFunBudgetAmount(_ amount: Decimal) -> String {
+        "\(currencySymbol) \(NSDecimalNumber(decimal: amount).stringValue)"
     }
     
     var body: some View {
@@ -44,62 +130,34 @@ struct MoneyView: View {
                                 Text("NET FLOW THIS MONTH")
                                     .font(.caption2)
                                     .fontWeight(.bold)
-                                    .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                    .foregroundStyle(SelfUpStyle.brand)
                                     .tracking(1)
                                 
                                 Text("\(currencySymbol) \(summary.net, format: .number.precision(.fractionLength(0...2)))")
                                     .font(.system(size: 34, weight: .bold, design: .default))
-                                    .foregroundStyle(summary.net >= 0 ? Color.emerald : Color.coral)
+                                    .foregroundStyle(summary.net >= 0 ? SelfUpStyle.success : SelfUpStyle.danger)
                             }
                             Spacer()
                             
                             ZStack {
                                 Circle()
-                                    .fill((summary.net >= 0 ? Color.emerald : Color.coral).opacity(0.12))
+                                    .fill((summary.net >= 0 ? SelfUpStyle.success : SelfUpStyle.danger).opacity(0.12))
                                     .frame(width: 44, height: 44)
                                 Image(systemName: summary.net >= 0 ? "arrow.up.right.circle.fill" : "arrow.down.right.circle.fill")
                                     .font(.title2)
-                                    .foregroundStyle(summary.net >= 0 ? Color.emerald : Color.coral)
+                                    .foregroundStyle(summary.net >= 0 ? SelfUpStyle.success : SelfUpStyle.danger)
                             }
                         }
                         
-                        // Side-by-side meters
-                        HStack(spacing: 16) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "arrow.down.left.circle.fill")
-                                        .foregroundStyle(Color.emerald)
-                                        .font(.caption)
-                                    Text("Income")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                }
-                                Text("\(currencySymbol) \(summary.income, format: .number)")
-                                    .font(.system(.headline, design: .default))
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(Color.emerald)
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: SelfUpStyle.spacingLG) {
+                                flowMetric(title: "Income", amount: summary.income, symbol: "arrow.down.left.circle.fill", color: SelfUpStyle.success)
+                                flowMetric(title: "Expenses", amount: summary.expenses, symbol: "arrow.up.right.circle.fill", color: SelfUpStyle.danger)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(10)
-                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.emerald.opacity(0.08)))
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "arrow.up.right.circle.fill")
-                                        .foregroundStyle(Color.coral)
-                                        .font(.caption)
-                                }
-                                Text("Expenses")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                Text("\(currencySymbol) \(summary.expenses, format: .number)")
-                                    .font(.system(.headline, design: .default))
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(Color.coral)
+                            VStack(spacing: SelfUpStyle.spacingSM) {
+                                flowMetric(title: "Income", amount: summary.income, symbol: "arrow.down.left.circle.fill", color: SelfUpStyle.success)
+                                flowMetric(title: "Expenses", amount: summary.expenses, symbol: "arrow.up.right.circle.fill", color: SelfUpStyle.danger)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(10)
-                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.coral.opacity(0.08)))
                         }
                         
                         // Progress bar representing Expense / Income ratio
@@ -113,7 +171,7 @@ struct MoneyView: View {
                                 Text("\(expenseRatio * 100, format: .number.precision(.fractionLength(0)))%")
                                     .font(.caption2)
                                     .fontWeight(.bold)
-                                    .foregroundStyle(expenseRatio > 0.8 ? Color.coral : (expenseRatio > 0.5 ? Color.orange : Color.emerald))
+                                    .foregroundStyle(expenseRatio > 0.8 ? SelfUpStyle.danger : (expenseRatio > 0.5 ? SelfUpStyle.warning : SelfUpStyle.success))
                             }
                             
                             GeometryReader { geo in
@@ -122,16 +180,19 @@ struct MoneyView: View {
                                         .fill(Color.primary.opacity(0.08))
                                         .frame(height: 8)
                                     Capsule()
-                                        .fill(expenseRatio > 0.8 ? Color.coral : (expenseRatio > 0.5 ? Color.orange : Color.emerald))
-                                        .frame(width: max(8, geo.size.width * CGFloat(expenseRatio)), height: 8)
-                                        .animation(.spring(response: 0.6, dampingFraction: 0.7), value: expenseRatio)
+                                        .fill(expenseRatio > 0.8 ? SelfUpStyle.danger : (expenseRatio > 0.5 ? SelfUpStyle.warning : SelfUpStyle.success))
+                                        .frame(width: expenseRatio == 0 ? 0 : max(8, geo.size.width * CGFloat(expenseRatio)), height: 8)
+                                        .animation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.7), value: expenseRatio)
                                 }
                             }
                             .frame(height: 8)
                         }
                     }
-                    .premiumCard(cornerRadius: 16)
+                    .premiumCard(cornerRadius: 18)
                     .padding(.horizontal)
+
+                    funBudgetCard
+                        .padding(.horizontal)
                     
                     // Donut Chart & Category breakdown
                     if !currentMonthTransactions.isEmpty {
@@ -151,8 +212,10 @@ struct MoneyView: View {
                             } label: {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.title3)
-                                    .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                    .foregroundStyle(SelfUpStyle.brand)
+                                    .frame(width: SelfUpStyle.Control.minimumTapTarget, height: SelfUpStyle.Control.minimumTapTarget)
                             }
+                            .accessibilityLabel("Add saving goal")
                         }
                         .padding(.horizontal)
                         
@@ -160,7 +223,7 @@ struct MoneyView: View {
                             VStack(spacing: 12) {
                                 Image(systemName: "target")
                                     .font(.largeTitle)
-                                    .foregroundStyle(SelfUpStyle.primaryIndigo.opacity(0.6))
+                                    .foregroundStyle(SelfUpStyle.brand.opacity(0.6))
                                 Text("Set your first saving goal")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
@@ -171,8 +234,8 @@ struct MoneyView: View {
                                         .font(.subheadline)
                                         .fontWeight(.bold)
                                         .padding(.horizontal, 16)
-                                        .padding(.vertical, 8)
-                                        .background(Capsule().fill(SelfUpStyle.primaryIndigo))
+                                        .frame(minHeight: SelfUpStyle.Control.minimumTapTarget)
+                                        .background(Capsule().fill(SelfUpStyle.brandFill))
                                         .foregroundStyle(.white)
                                 }
                                 .pressableScale()
@@ -200,7 +263,7 @@ struct MoneyView: View {
                                             Text("\(progress * 100, format: .number.precision(.fractionLength(0)))%")
                                                 .font(.system(.callout, design: .default))
                                                 .fontWeight(.bold)
-                                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                                .foregroundStyle(SelfUpStyle.brand)
                                         }
                                         
                                         GeometryReader { geo in
@@ -210,7 +273,7 @@ struct MoneyView: View {
                                                     .frame(height: 8)
                                                 Capsule()
                                                     .fill(SelfUpStyle.heroGradient)
-                                                    .frame(width: max(8, geo.size.width * CGFloat(progress)), height: 8)
+                                                    .frame(width: progress == 0 ? 0 : max(8, geo.size.width * CGFloat(progress)), height: 8)
                                             }
                                         }
                                         .frame(height: 8)
@@ -228,9 +291,9 @@ struct MoneyView: View {
                                                 .font(.caption)
                                                 .fontWeight(.bold)
                                                 .padding(.horizontal, 12)
-                                                .padding(.vertical, 6)
-                                                .background(Capsule().fill(SelfUpStyle.primaryIndigo.opacity(0.12)))
-                                                .foregroundStyle(SelfUpStyle.primaryIndigo)
+                                                .frame(minHeight: SelfUpStyle.Control.minimumTapTarget)
+                                                .background(Capsule().fill(SelfUpStyle.brand.opacity(0.12)))
+                                                .foregroundStyle(SelfUpStyle.brand)
                                             }
                                             .pressableScale(scale: 0.92)
                                         }
@@ -291,7 +354,7 @@ struct MoneyView: View {
                                             } label: {
                                                 Label("Edit", systemImage: "pencil")
                                             }
-                                            .tint(SelfUpStyle.primaryIndigo)
+                                            .tint(SelfUpStyle.brandFill)
                                         }
                                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                             Button(role: .destructive) {
@@ -330,7 +393,7 @@ struct MoneyView: View {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title3)
-                            .foregroundStyle(SelfUpStyle.primaryIndigo)
+                            .foregroundStyle(SelfUpStyle.brand)
                     }
                 }
             }
@@ -352,17 +415,356 @@ struct MoneyView: View {
             .sheet(item: $goalToFund) { goal in
                 SavingGoalFundView(goal: goal)
             }
+            .sheet(isPresented: $showingFunBudgetEditor) {
+                FunBudgetEditorView(
+                    currencySymbol: currencySymbol,
+                    initialLimit: funBudgetStore.limit,
+                    initialNotificationsEnabled: funBudgetStore.notificationsEnabled,
+                    onSave: saveFunBudget
+                )
+            }
         }
+        .task { await reconcileFunBudget() }
+        .onChange(of: funBudgetTransactionSignature) { _, _ in
+            funBudgetNow = Date()
+            Task { await reconcileFunBudget() }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active else { return }
+            funBudgetNow = Date()
+            Task { await reconcileFunBudget() }
+        }
+    }
+
+    private func flowMetric(title: String, amount: Decimal, symbol: String, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: SelfUpStyle.Spacing.xSmall) {
+            Label(title, systemImage: symbol)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text("\(currencySymbol) \(amount, format: .number)")
+                .font(.headline)
+                .fontWeight(.bold)
+                .foregroundStyle(color)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(SelfUpStyle.spacingMD)
+        .background(RoundedRectangle(cornerRadius: SelfUpStyle.Radius.small).fill(color.opacity(0.08)))
+        .accessibilityElement(children: .combine)
+    }
+
+    private var funBudgetCard: some View {
+        VStack(alignment: .leading, spacing: SelfUpStyle.Spacing.medium) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: SelfUpStyle.Spacing.xSmall) {
+                    Text("Fun budget (Entertainment)")
+                        .font(.headline)
+                    Text("\(funBudgetMonthLabel) recurring monthly budget")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Button(funBudgetSnapshot.isConfigured ? "Edit" : "Set budget") {
+                    showingFunBudgetEditor = true
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(SelfUpStyle.brand)
+                .frame(minWidth: SelfUpStyle.Control.minimumTapTarget, minHeight: SelfUpStyle.Control.minimumTapTarget)
+            }
+
+            if funBudgetSnapshot.isConfigured {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: SelfUpStyle.Spacing.large) {
+                        funBudgetAmountMetric(
+                            label: "SPENT",
+                            amount: funBudgetSnapshot.spent,
+                            color: .primary,
+                            alignment: .leading
+                        )
+                        Spacer()
+                        funBudgetAmountMetric(
+                            label: "LIMIT",
+                            amount: funBudgetSnapshot.limit,
+                            color: .primary,
+                            alignment: .center
+                        )
+                        Spacer()
+                        funBudgetAmountMetric(
+                            label: funBudgetSnapshot.overage > 0 ? "OVER" : "REMAINING",
+                            amount: funBudgetSnapshot.overage > 0 ? funBudgetSnapshot.overage : funBudgetSnapshot.remaining,
+                            color: funBudgetAttentionColor,
+                            alignment: .trailing
+                        )
+                    }
+
+                    VStack(alignment: .leading, spacing: SelfUpStyle.Spacing.medium) {
+                        funBudgetAmountMetric(
+                            label: "SPENT",
+                            amount: funBudgetSnapshot.spent,
+                            color: .primary,
+                            alignment: .leading
+                        )
+                        funBudgetAmountMetric(
+                            label: "LIMIT",
+                            amount: funBudgetSnapshot.limit,
+                            color: .primary,
+                            alignment: .leading
+                        )
+                        funBudgetAmountMetric(
+                            label: funBudgetSnapshot.overage > 0 ? "OVER" : "REMAINING",
+                            amount: funBudgetSnapshot.overage > 0 ? funBudgetSnapshot.overage : funBudgetSnapshot.remaining,
+                            color: funBudgetAttentionColor,
+                            alignment: .leading
+                        )
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: SelfUpStyle.Spacing.xSmall) {
+                    HStack {
+                        Text("\(funBudgetUsagePercentage, format: .number.precision(.fractionLength(0)))% used")
+                            .font(.caption.weight(.semibold))
+                        Spacer()
+                        Text(funBudgetDayContext)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    ProgressView(value: funBudgetProgress)
+                        .tint(funBudgetAttentionColor)
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Fun budget used")
+                .accessibilityValue("\(funBudgetUsagePercentage, format: .number.precision(.fractionLength(0))) percent. \(funBudgetDayContext)")
+
+                HStack(spacing: SelfUpStyle.Spacing.small) {
+                    Image(systemName: funBudgetAttentionIcon)
+                    Text(funBudgetAttentionText)
+                        .font(.caption.weight(.semibold))
+                    Spacer(minLength: 0)
+                }
+                .foregroundStyle(funBudgetAttentionColor)
+                .padding(.horizontal, SelfUpStyle.Spacing.medium)
+                .padding(.vertical, SelfUpStyle.Spacing.small)
+                .background(funBudgetAttentionColor.opacity(0.1), in: Capsule())
+
+                HStack(spacing: SelfUpStyle.Spacing.small) {
+                    Image(systemName: funBudgetStore.notificationsEnabled ? "bell.fill" : "bell.slash")
+                    Text(funBudgetStore.notificationsEnabled ? "80% warning enabled" : "80% warning off")
+                    Spacer()
+                    if funBudgetPermissionDenied {
+                        Button("Open Settings") { openNotificationSettings() }
+                            .fontWeight(.semibold)
+                            .frame(minHeight: SelfUpStyle.Control.minimumTapTarget)
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(funBudgetPermissionDenied ? SelfUpStyle.danger : Color.secondary)
+            } else {
+                Text(funBudgetAttentionText)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                Button {
+                    showingFunBudgetEditor = true
+                } label: {
+                    Label("Set fun budget", systemImage: "plus")
+                        .frame(maxWidth: .infinity)
+                        .frame(minHeight: SelfUpStyle.Control.minimumTapTarget)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(SelfUpStyle.brandFill)
+            }
+
+            if let funBudgetNotificationMessage {
+                Text(funBudgetNotificationMessage)
+                    .font(.caption)
+                    .foregroundStyle(funBudgetPermissionDenied ? SelfUpStyle.danger : .secondary)
+            }
+        }
+        .premiumCard(cornerRadius: SelfUpStyle.Radius.medium)
+    }
+
+    private func saveFunBudget(limit: Decimal, notificationsEnabled: Bool) {
+        let store = funBudgetStore
+        store.limit = limit
+        store.notificationsEnabled = notificationsEnabled
+        funBudgetNow = Date()
+        funBudgetNotificationMessage = nil
+        funBudgetPermissionDenied = false
+
+        Task {
+            if notificationsEnabled {
+                switch await NotificationManager.requestFunBudgetAuthorization() {
+                case .authorized:
+                    break
+                case .denied:
+                    funBudgetPermissionDenied = true
+                    funBudgetNotificationMessage = "Allow notifications in Settings to receive the mid-month warning."
+                case .failed(let message):
+                    funBudgetNotificationMessage = "Could not request notifications: \(message)"
+                }
+            }
+            await reconcileFunBudget()
+        }
+    }
+
+    private func funBudgetAmountMetric(
+        label: String,
+        amount: Decimal,
+        color: Color,
+        alignment: HorizontalAlignment
+    ) -> some View {
+        VStack(alignment: alignment, spacing: SelfUpStyle.Spacing.xxSmall) {
+            Text(label)
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(.secondary)
+            Text("\(currencySymbol) \(amount, format: .number.precision(.fractionLength(0...2)))")
+                .font(.title3.weight(.bold))
+                .foregroundStyle(color)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func reconcileFunBudget(using transactionsToEvaluate: [Transaction]? = nil) async {
+        let result = await NotificationManager.reconcileFunBudget(
+            transactions: transactionsToEvaluate ?? transactions,
+            currencySymbol: currencySymbol,
+            now: funBudgetNow,
+            calendar: .autoupdatingCurrent
+        )
+
+        switch result {
+        case .notAuthorized:
+            funBudgetPermissionDenied = funBudgetStore.notificationsEnabled
+            if funBudgetPermissionDenied {
+                funBudgetNotificationMessage = "Allow notifications in Settings to receive the mid-month warning."
+            }
+        case .failed(let message):
+            funBudgetNotificationMessage = "Could not update the warning: \(message)"
+        case .scheduled:
+            funBudgetPermissionDenied = false
+            funBudgetNotificationMessage = "Warning scheduled for the 15th at 9:00 AM."
+        case .notified:
+            funBudgetPermissionDenied = false
+            funBudgetNotificationMessage = "This month's fun-budget warning was sent."
+        case .cancelled, .notificationsDisabled:
+            funBudgetPermissionDenied = false
+            funBudgetNotificationMessage = nil
+        case .unchanged:
+            break
+        }
+    }
+
+    private func openNotificationSettings() {
+        guard let url = URL(string: UIApplication.openNotificationSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
     
     private func delete(_ transaction: Transaction) {
         modelContext.delete(transaction)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            let savedTransactions = try modelContext.fetch(FetchDescriptor<Transaction>())
+            funBudgetNow = Date()
+            Task { await reconcileFunBudget(using: savedTransactions) }
+        } catch {
+            funBudgetNotificationMessage = "Could not save the transaction change."
+        }
     }
     
     private func deleteGoal(_ goal: SavingGoal) {
         modelContext.delete(goal)
         try? modelContext.save()
+    }
+}
+
+private struct FunBudgetEditorView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let currencySymbol: String
+    let onSave: (Decimal, Bool) -> Void
+
+    @State private var limitText: String
+    @State private var notificationsEnabled: Bool
+    @State private var errorMessage: String?
+
+    init(
+        currencySymbol: String,
+        initialLimit: Decimal,
+        initialNotificationsEnabled: Bool,
+        onSave: @escaping (Decimal, Bool) -> Void
+    ) {
+        self.currencySymbol = currencySymbol
+        self.onSave = onSave
+        _limitText = State(
+            initialValue: initialLimit > 0
+                ? NSDecimalNumber(decimal: initialLimit).stringValue
+                : ""
+        )
+        _notificationsEnabled = State(initialValue: initialNotificationsEnabled)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    HStack {
+                        Text(currencySymbol)
+                            .foregroundStyle(.secondary)
+                        TextField("0", text: $limitText)
+                            .keyboardType(.decimalPad)
+                            .accessibilityIdentifier("fun_budget_limit_field")
+                    }
+                } header: {
+                    Text("Monthly limit")
+                } footer: {
+                    Text("Entertainment expenses reset against this limit each calendar month.")
+                }
+
+                Section {
+                    Toggle("Mid-month 80% warning", isOn: $notificationsEnabled)
+                } header: {
+                    Text("Warning")
+                } footer: {
+                    Text("If 80% is used early, SelfUp schedules one warning for the 15th at 9:00 AM. If it happens later, the warning is immediate. Enabling this asks for notification permission.")
+                }
+
+                if let errorMessage {
+                    Section {
+                        Text(errorMessage)
+                            .font(.subheadline)
+                            .foregroundStyle(SelfUpStyle.danger)
+                    }
+                }
+            }
+            .navigationTitle("Fun budget (Entertainment)")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") { save() }
+                        .fontWeight(.semibold)
+                }
+            }
+        }
+    }
+
+    private func save() {
+        let normalized = limitText.replacingOccurrences(of: ",", with: ".")
+        guard let limit = Decimal(
+            string: normalized,
+            locale: Locale(identifier: "en_US_POSIX")
+        ), limit > 0 else {
+            errorMessage = "Enter a monthly limit greater than zero."
+            return
+        }
+
+        onSave(limit, notificationsEnabled)
+        dismiss()
     }
 }
 
@@ -378,11 +780,11 @@ struct TransactionRow: View {
         HStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill(isIncome ? Color.emerald.opacity(0.12) : Color.coral.opacity(0.12))
+                    .fill((isIncome ? SelfUpStyle.success : SelfUpStyle.danger).opacity(0.12))
                     .frame(width: 42, height: 42)
                 Image(systemName: isIncome ? "arrow.down.left.circle.fill" : "arrow.up.right.circle.fill")
                     .font(.title3)
-                    .foregroundStyle(isIncome ? Color.emerald : Color.coral)
+                    .foregroundStyle(isIncome ? SelfUpStyle.success : SelfUpStyle.danger)
             }
             
             VStack(alignment: .leading, spacing: 2) {
@@ -403,7 +805,7 @@ struct TransactionRow: View {
                 Text("\(isIncome ? "+" : "-")\(currencySymbol) \(transaction.amount, format: .number.precision(.fractionLength(0...2)))")
                     .font(.system(.subheadline, design: .default))
                     .fontWeight(.bold)
-                    .foregroundStyle(isIncome ? Color.emerald : .primary)
+                    .foregroundStyle(isIncome ? SelfUpStyle.success : .primary)
                 Text(transaction.date, style: .date)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -411,4 +813,3 @@ struct TransactionRow: View {
         }
     }
 }
-

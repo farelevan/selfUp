@@ -24,7 +24,7 @@ struct SelfUpLogoView: View {
                         .foregroundStyle(.primary)
                     Text("Up")
                         .font(.system(size: 22, weight: .semibold, design: .default))
-                        .foregroundStyle(SelfUpStyle.primaryIndigo)
+                        .foregroundStyle(SelfUpStyle.brand)
                 }
             }
             
@@ -39,7 +39,7 @@ struct SelfUpLogoView: View {
                         .foregroundStyle(.primary)
                     Text("Up")
                         .font(.system(size: 42, weight: .semibold, design: .default))
-                        .foregroundStyle(SelfUpStyle.primaryIndigo)
+                        .foregroundStyle(SelfUpStyle.brand)
                 }
                 
             }

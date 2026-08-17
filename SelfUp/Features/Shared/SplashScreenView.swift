@@ -2,6 +2,8 @@ import SwiftUI
 
 struct SplashScreenView<MainContent: View>: View {
     @ViewBuilder let mainContent: MainContent
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     @State private var isAnimating = false
     @State private var pulseRing = false
@@ -24,7 +26,7 @@ struct SplashScreenView<MainContent: View>: View {
                     // Restrained ambient depth
                     ZStack {
                         Circle()
-                            .fill(SelfUpStyle.primaryIndigo.opacity(0.10))
+                            .fill(SelfUpStyle.brand.opacity(0.10))
                             .frame(width: 260, height: 260)
                             .scaleEffect(pulseRing ? 1.24 : 0.86)
                             .blur(radius: 30)
@@ -40,7 +42,7 @@ struct SplashScreenView<MainContent: View>: View {
                             .opacity(isAnimating ? 0.65 : 0)
 
                         Circle()
-                            .fill(SelfUpStyle.primaryIndigo)
+                            .fill(SelfUpStyle.brandFill)
                             .frame(width: 7, height: 7)
                             .offset(y: -95)
                             .rotationEffect(.degrees(orbitRotation))
@@ -63,6 +65,11 @@ struct SplashScreenView<MainContent: View>: View {
                 }
                 .opacity(fadeOut ? 0 : 1)
                 .onAppear {
+                    guard !reduceMotion else {
+                        isSplashFinished = true
+                        return
+                    }
+
                     // Start Animation Sequence
                     withAnimation(.spring(response: 0.8, dampingFraction: 0.65)) {
                         isAnimating = true
@@ -79,8 +86,6 @@ struct SplashScreenView<MainContent: View>: View {
                     withAnimation(.easeOut(duration: 0.5).delay(0.55)) {
                         taglineVisible = true
                     }
-                    
-                    Haptics.success()
                     
                     // Dismiss Splash after 1.8 seconds
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
